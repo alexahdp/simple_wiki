@@ -1,0 +1,68 @@
+% use HTML::BBCode;
+
+
+<html>
+<head>
+	<meta charset="utf8">
+	
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link rel="stylesheet" href="/css/wbbtheme.css">
+	<link rel="stylesheet" href="/css/alertify.core.css">
+	<link rel="stylesheet" href="/css/alertify.bootstrap.css">
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="/js/lib/jquery.wysibb.min.js"></script>
+	<script src="/js/lib/alertify.min.js"></script>
+	<script src="/js/wiki.js"></script>
+</head>
+<body>
+	<div class="container page-content">
+		<h1>WIKI</h1>
+		
+		<form method="post" action="/wiki" id="new-article-form">
+			<input type="text" class="title" name="title"><br>
+			<textarea name="content"></textarea><br>
+			<input type="submit" value="Добавить">
+		</form>
+		
+		<div class="span2">
+			<span class="add-article">Создать</span>
+			
+			<ul class="article-titles unstyled">
+			% my $i = 0;
+			<% for (@$articles) { %>
+				<li data-id="<%= $_->{'_id'} %>" class="<%=$i == $current ? 'current':''%>">
+					<a href="/wiki/<%= $i %>"><%= $_->{'author'} %></a>
+					<span class="article-remove icon-remove"></span>
+				</li>
+				% $i++;
+			<% } %>
+			</ul>
+		</div>
+		
+		<div class="span8">
+			<div>
+				<span class="article-edit btn">Редактировать</span>
+				<span class="edit-controls">
+					<span class="save-article btn">Сохранить</span>
+					<span class="cancel-article btn">Отменить</span>
+				</span>
+			</div>
+			<div class="article-id"><%= $articles->[$current]->{'_id'} %></div>
+			<div class="article-content">
+				% my $bbc  = HTML::BBCode->new({linebreaks => 1});
+				<%== $bbc->parse($articles->[$current]->{'content'}) %>
+			</div>
+			
+			<div class="article-content-edit">
+				<textarea>
+					<%== $articles->[$current]->{'content'} %>
+				</textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

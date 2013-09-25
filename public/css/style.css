@@ -1,0 +1,52 @@
+b{
+	font-weight: 900;
+}
+i{
+	font-style: italic;
+}
+.article-titles li{
+	position: relative;
+	background-color: #9090F9;
+	margin-bottom: 5px;
+	padding: 4px;
+	cursor: pointer;
+}
+
+.article-titles li.current{
+	background-color: #0000ff;
+}
+
+.article-titles a{
+	color: #fff;
+}
+.article-remove{
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	width: 15px;
+	height: 15px;
+	display: none;
+}
+.article-titles li:hover .article-remove{
+	display: block;
+}
+
+.article-titles li:hover{
+	background-color: #0000ff;
+}
+
+.article-content-edit{
+	display: none;
+}
+
+.edit-controls{
+	display: none;
+}
+
+#new-article-form{
+	display: none;
+}
+
+.article-id{
+	display: none;
+}
