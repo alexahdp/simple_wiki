@@ -1,68 +1,43 @@
 % use HTML::BBCode;
 
+% layout 'default', title => 'Wiki', scripts => ['/js/wiki.js'];
 
-<html>
-<head>
-	<meta charset="utf8">
-	
-	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
-	<link rel="stylesheet" href="/css/bootstrap.css">
-	<link rel="stylesheet" href="/css/wbbtheme.css">
-	<link rel="stylesheet" href="/css/alertify.core.css">
-	<link rel="stylesheet" href="/css/alertify.bootstrap.css">
-	<link rel="stylesheet" href="/css/style.css">
-	
-	
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="/js/lib/jquery.wysibb.min.js"></script>
-	<script src="/js/lib/alertify.min.js"></script>
-	<script src="/js/wiki.js"></script>
-</head>
-<body>
-	<div class="container page-content">
-		<h1>WIKI</h1>
-		
-		<form method="post" action="/wiki" id="new-article-form">
-			<input type="text" class="title" name="title"><br>
-			<textarea name="content"></textarea><br>
-			<input type="submit" value="Добавить">
-		</form>
-		
-		<div class="span2">
-			<span class="add-article">Создать</span>
-			
-			<ul class="article-titles unstyled">
-			% my $i = 0;
-			<% for (@$articles) { %>
-				<li data-id="<%= $_->{'_id'} %>" class="<%=$i == $current ? 'current':''%>">
-					<a href="/wiki/<%= $i %>"><%= $_->{'author'} %></a>
-					<span class="article-remove icon-remove"></span>
-				</li>
-				% $i++;
-			<% } %>
-			</ul>
-		</div>
-		
-		<div class="span8">
-			<div>
-				<span class="article-edit btn">Редактировать</span>
-				<span class="edit-controls">
-					<span class="save-article btn">Сохранить</span>
-					<span class="cancel-article btn">Отменить</span>
-				</span>
-			</div>
-			<div class="article-id"><%= $articles->[$current]->{'_id'} %></div>
-			<div class="article-content">
-				% my $bbc  = HTML::BBCode->new({linebreaks => 1});
-				<%== $bbc->parse($articles->[$current]->{'content'}) %>
-			</div>
-			
-			<div class="article-content-edit">
-				<textarea>
-					<%== $articles->[$current]->{'content'} %>
-				</textarea>
-			</div>
-		</div>
+<div class="span2">
+	<ul class="article-titles nav nav-pills nav-stacked">
+	<% for (@$articles) { %>
+		<li data-id="<%= $_->{'_id'} %>" class="<%= $_->{'url_title'} eq $url_title ? 'active':''%>">
+			<a href="/wiki/<%= $_->{'url_title'} %>"><%= $_->{'title'} %></a>
+			<span class="article-remove icon-remove"></span>
+		</li>
+	<% } %>
+	</ul>
+	<div class="add-article but">Создать</div>
+</div>
+
+<div class="span8">
+	<div class="controls-bar">
+		<span class="article-edit btn btn-mini"><span class="icon-pencil"></span></span>
+		<span class="edit-controls">
+			<span class="save-article btn btn-mini">Сохранить</span>
+			<span class="cancel-article btn btn-mini">Отменить</span>
+		</span>
 	</div>
-</body>
-</html>
+	
+	% my $current = [grep { $_->{'url_title'} eq $url_title } @$articles]->[0];
+	% if ($current) {
+	<div class="article-id"><%= $current->{'_id'} %></div>
+	<h3><%= $current->{'title'} %></h3>
+	<div class="article-content">
+		% my $bbc  = HTML::BBCode->new({linebreaks => 1});
+		<%== $bbc->parse($current->{'content'}) %>
+	</div>
+	
+	<div class="article-content-edit">
+		<textarea rows="5">
+			<%== $current->{'content'} %>
+		</textarea>
+	</div>
+	% }else{
+		<h3>Нет такой заметки</h3>
+	% }
+</div>

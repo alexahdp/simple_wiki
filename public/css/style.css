@@ -1,24 +1,7 @@
-b{
-	font-weight: 900;
-}
-i{
-	font-style: italic;
-}
-.article-titles li{
-	position: relative;
-	background-color: #9090F9;
-	margin-bottom: 5px;
-	padding: 4px;
-	cursor: pointer;
+body{
+	padding-top: 60px;
 }
 
-.article-titles li.current{
-	background-color: #0000ff;
-}
-
-.article-titles a{
-	color: #fff;
-}
 .article-remove{
 	position: absolute;
 	right: 3px;
@@ -27,12 +10,15 @@ i{
 	height: 15px;
 	display: none;
 }
+.article-titles{
+	margin-top: 25px;
+}
+.article-titles li{
+	position: relative;
+}
 .article-titles li:hover .article-remove{
 	display: block;
-}
-
-.article-titles li:hover{
-	background-color: #0000ff;
+	cursor: pointer;
 }
 
 .article-content-edit{
@@ -48,5 +34,33 @@ i{
 }
 
 .article-id{
+	display: none;
+}
+
+.controls-bar{
+	text-align: right;
+}
+.wysibb-text-editor{
+	min-height: 200px !important;
+}
+
+.but{
+	background-color: #09A509;
+	text-align: center;
+	border-radius: 5px;
+	padding: 4px;
+	color: #fff;
+	cursor: pointer;
+}
+
+.but:hover{
+	background-color: #0A960A;
+}
+
+.but:active{
+	background-color: #097C09;
+}
+
+.wysibb .powered{
 	display: none;
 }

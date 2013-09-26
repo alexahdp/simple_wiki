@@ -1,5 +1,9 @@
+'use strict';
+
 $(function(){
 	 var wb = $('.article-content-edit textarea').wysibb({
+		smileList: '',
+		minHeight: 400,
 		buttons: "bold,italic,underline,|,img,link,|,code,quote"
 	});
 	
@@ -20,7 +24,7 @@ $(function(){
 			if (e) {
 				$.post('/wiki', {title: str, content: ""}, function(res){
 					if (res.success) {
-						window.location = '/wiki';
+						window.location = '/wiki/' + res.url_title;
 					}
 				});
 			}else{
@@ -31,9 +35,9 @@ $(function(){
 	
 	$('.save-article').click(function(){
 		$.ajax({
-			url: '/wiki',
+			url: '/wiki/' + $('.article-id').text(),
 			type: 'put',
-			data: {id: $('.article-id').text(), content: $('.article-content-edit textarea').bbcode()},
+			data: {content: $('.article-content-edit textarea').bbcode()},
 			success: function(res){
 				if (res.success){
 					window.location.href = '';
@@ -45,9 +49,8 @@ $(function(){
 	$('.article-remove').click(function(){
 		var me = $(this);
 		$.ajax({
-			url: '/wiki',
+			url: '/wiki/' + me.parent().attr('data-id'),
 			type: 'delete',
-			data: {id: me.parent().attr('data-id')},
 			success: function(res){
 				if (res.success) {
 					window.location.href='';

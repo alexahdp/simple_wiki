@@ -1,5 +1,53 @@
 <!DOCTYPE html>
-<html>
-  <head><title><%= title %></title></head>
-  <body><%= content %></body>
+<html lang="ru">
+<head>
+	<meta charset="utf8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %></title>
+	
+	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link rel="stylesheet" href="/css/wbbtheme.css">
+	<link rel="stylesheet" href="/css/alertify.core.css">
+	<link rel="stylesheet" href="/css/alertify.bootstrap.css">
+	<link rel="stylesheet" href="/css/style.css">
+	%= stylesheet $_ for(@{stash('styles') || []});
+	
+	<script src="/js/lib/jquery-1.9.1.js"></script>
+	<script src="/js/lib/bootstrap.js"></script>
+	<script src="/js/lib/jquery.wysibb.min.js"></script>
+	<script src="/js/lib/alertify.min.js"></script>
+	%= javascript $_ for(@{stash('scripts') || []});
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="brand" href="#">uid.me.dev</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+						% for (qw/wiki wall/) {
+							<li class="<%= current_route eq $_ ? 'active':''%>">
+								<a href="/<%=$_%>"><%=$_%></a>
+							</li>
+						% }
+					</ul>
+				</div>
+				<div class="pull-right">
+					<ul class="nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">User <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="/settings">Settings</a></li>
+								<li><a href="/logout">Logout</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container page-content">
+		%= content;
+	</div>
+</body>
 </html>

@@ -1,0 +1,12 @@
+% layout 'unlogged', title => 'Регистрация';
+
+<div style="position: relative; margin: 0 auto; top: 50px; width: 400px">
+	<form class="form-signin" method="post" action="/registration">
+		<h2 class="form-signin-heading">Registration form</h2>
+		<p class="text-error"><%= stash('warnings') %></p>
+		<input type="text" name="email" class="input-block-level" placeholder="Email address" value="<%= stash('email') %>">
+		<input type="password" name="password" class="input-block-level" placeholder="Password">
+		<input type="password" name="confirm_password" class="input-block-level" placeholder="Confirm password">
+		<button class="btn btn-large btn-primary" type="submit">Register</button>
+	</form>
+</div>
