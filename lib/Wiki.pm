@@ -2,6 +2,8 @@ package Wiki;
 use Mojo::Base 'Mojolicious';
 use Mango;
 
+use DateTime;
+
 use  strict;
 use warnings;
 
@@ -51,6 +53,8 @@ sub startup {
 			
 			s/ъ//g; s/Ъ//s; s/ь//g; s/Ь//g;
 			
+			s/\s/_/;
+			
 			tr/
 			абвгдзийклмнопрстуфхцыАБВГДЗИЙКЛМНОПРСТУФХЦЫ/
 			abvgdziyklmnoprstufhcyABVGDZIYKLMNOPRSTUFHCY/;
@@ -58,6 +62,13 @@ sub startup {
 			s/a[^a-z0-9\-_']/_/ig;
 			return $_;
 		};
+	});
+	
+	$self->helper('get_dt' => sub{
+		my $s = shift;
+		my $dt = shift;
+		my $d = DateTime->from_epoch(epoch => $dt, time_zone => 'Europe/Moscow');
+		$d->hms.' '.$d->ymd('.');
 	});
 	
 	# Router
@@ -79,7 +90,9 @@ sub startup {
 	$aub->put('/wiki/:url_title')->to('articles#update');
 	$aub->delete('/wiki/:url_title')->to('articles#remove');
 	
-	$aub->get('/wall')->to('articles#list')->name('wall');
+	$aub->get('/wall')->to('wall#list')->name('wall');
+	$aub->post('/wall')->to('wall#add');
+	#$r->get('/:any') => sub{shift->redirect_to('wall#list')};
 }
 
 1;

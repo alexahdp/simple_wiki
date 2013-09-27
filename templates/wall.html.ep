@@ -1,0 +1,35 @@
+% layout 'default', title => 'Wall', styles => ['/css/wall.css'];
+
+<div style="position: relative; margin: 0 auto; width: 400px">
+	<form class="" method="post" action="/wall">
+		<textarea name="post" rows="4" cols="25" class="input-block-level"></textarea>
+		<div class="text-right">
+			<button class="btn btn-primary" type="submit">Add</button>
+		</div>
+	</form>
+</div>
+
+<div id="wall" style="position: relative; margin: 0 auto; width: 600px">
+	% for my $post( @$posts ) {
+		<div class="wall-post">
+			<div class="post-header">
+				<span class="post-author"><%= $post->{'author'} %></span>
+				<span class="post-date"><%= get_dt($post->{'date_add'}) %></span>
+			</div>
+			<div class="post-content"><%= $post->{'content'} %></div>
+			<div class="post-footer"></div>
+		</div>
+	% }
+</div>
+
+<div class="pagination pagination-centered">
+	<ul>
+		<li class="disabled"><a href="#">«</a></li>
+		<li class="active"><a href="#">1</a></li>
+		<li><a href="#">2</a></li>
+		<li><a href="#">3</a></li>
+		<li><a href="#">4</a></li>
+		<li><a href="#">5</a></li>
+		<li><a href="#">»</a></li>
+	</ul>
+</div>

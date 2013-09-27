@@ -18,10 +18,12 @@ sub list {
 sub add {
 	my $s = shift;
 	
+	my $u = {username => 'alex'};
+	
 	my $url_title = lc $s->win2translit($s->p('title'));
 	
 	my $article = {
-		author      => 'alex',
+		author      => $u->{'username'},
 		title       => $s->p('title'),
 		url_title   => $url_title,
 		date_add    => time,
@@ -30,6 +32,15 @@ sub add {
 	};
 	
 	$s->mango->db->collection('articles')->insert($article);
+	
+	my $wall_post = {
+		author   => 'system',
+		date_add => time,
+		content  => $u->{'username'}." add new article [b]".$article->{'title'}."[/b] to wiki"
+	};
+	
+	$s->mango->db->collection('wall')->insert($wall_post);
+	
 	$s->render(json => {'success' => Mojo::JSON->true, url_title => $url_title});
 }
 
