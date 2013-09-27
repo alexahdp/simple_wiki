@@ -7,6 +7,7 @@ use Mango::BSON::ObjectID;
 use  strict;
 use warnings;
 
+
 sub list {
 	my $s = shift;
 	
@@ -16,10 +17,12 @@ sub list {
 	);
 }
 
+
 sub get {
 	my $s = shift;
 	
 }
+
 
 sub add {
 	my $s = shift;
@@ -34,10 +37,12 @@ sub add {
 	$s->redirect_to('/wall');
 }
 
+
 sub update {
 	my $s = shift;
 	
 }
+
 
 sub remove {
 	my $s = shift;

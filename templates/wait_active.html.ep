@@ -1,0 +1,6 @@
+% layout 'default', title => 'Wait activation';
+
+<div class="hero-unit">
+	<h1>Please, wait</h1>
+	<p>Your account waiting administration activate. Try login later.</p>
+</div>
