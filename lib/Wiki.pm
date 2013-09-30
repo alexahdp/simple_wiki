@@ -93,6 +93,10 @@ sub startup {
 	$aub->get('/wall')->to('wall#list')->name('wall');
 	$aub->post('/wall')->to('wall#add');
 	#$r->get('/:any') => sub{shift->redirect_to('wall#list')};
+
+	$r->get('/' => sub {shift->redirect_to('/login')});
+#	$r->get('/(*any)') => sub { shift->redirect_to('/login');  };
+
 }
 
 1;
