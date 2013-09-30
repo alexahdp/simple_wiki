@@ -1,11 +1,25 @@
 % layout 'unlogged', title => 'Регистрация';
+% my $warnings = stash('warnings') || {};
+% my $values = stash('values') || {};
 
 <div style="position: relative; margin: 0 auto; top: 50px; width: 400px">
 	<form class="form-signin" method="post" action="/registration">
 		<h2 class="form-signin-heading">Registration form</h2>
-		<p class="text-error"><%= stash('warnings') %></p>
-		<input type="text" name="email" class="input-block-level" placeholder="Email address" value="<%= stash('email') %>">
+		
+		<p class="text-error"><%= $warnings->{'username'} %></p>
+		<input type="text" name="username" class="input-block-level" placeholder="Username" value="<%= $values->{'username'} %>">
+		
+		<p class="text-error"><%= $warnings->{'email'} %></p>
+		<input type="text" name="email" class="input-block-level" placeholder="Email address" value="<%= $values->{'email'} %>">
+		
+		<p class="text-error"><%= $warnings->{'first_name'} %></p>
+		<input type="text" name="first_name" class="input-block-level" placeholder="First name" value="<%= $values->{'first_name'} %>">
+		
+		<input type="text" name="last_name" class="input-block-level" placeholder="Last Name" value="<%= $values->{'last_name'} %>">
+		<p class="text-error"><%= $warnings->{'last_name'} %></p>
 		<input type="password" name="password" class="input-block-level" placeholder="Password">
+		
+		<p class="text-error"><%= $warnings->{'confirm_password'} %></p>
 		<input type="password" name="confirm_password" class="input-block-level" placeholder="Confirm password">
 		<button class="btn btn-large btn-primary" type="submit">Register</button>
 	</form>
