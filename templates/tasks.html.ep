@@ -1,0 +1,76 @@
+% layout 'default', title => 'Tasks', styles => ['/css/tasks.css'], scripts => ['/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/tasks.js'];
+
+<!--<div class="container">
+	<div class="breadcrumb">
+		
+		<span>Отображать задач: </span>
+		<select id="count_visible_tasks">
+			<option value="5">5</option>
+			<option value="10">10</option>
+			<option value="15">15</option>
+			<option value="20">20   </option>
+		</select>
+		
+		<span>Проект: </span>
+		<select>
+			<option value="project1">Project1</option>
+			<option value="project1">Project2</option>
+			<option value="project3">Project3</option>
+		</select>
+		
+		<input id="search_task" >
+	</div>
+</div>-->
+
+<div class="row show-grid">
+	<div class="span6">
+	
+	% my $first = 1;
+	% for my $date ( keys %$complete_tasks ) {
+		<div class="work-day <%= $first == 1 ? 'current':'' %>">
+			<div class="alert <% $first == 1 ? 'alert-success': 'alert-info';%>"><%= $date; %></div>
+			<ol>
+			% for my $task ( @{$complete_tasks->{$date}} ) {
+				<li class="complete-task">
+					<span task_id="<%= $task->{'_id'}; %>"><%= $task->{'task'}; %></span>
+					<div class="date_complete"><%= $task->{'date_complete'}; %></div>
+					<i class="task-icon task-uncomplete-icon icon-arrow-right" title="Вернуть в стэк"></i>
+					<i class="task-icon task-remove-icon icon-remove" title="Удалить"></i>
+				</li>
+			% }
+			</ol>
+			</div>
+			<div class="clearfix"></div>
+			% $first = 0;
+		% }
+	</div>
+	
+	<div class="span6">
+		
+		<div class="control-group">
+			<label for="new_task" class="control-label">Текст задачи</label>
+			<div class="controls">
+				<input type="text" id="new_task" name="new_task" style="width: 450px;">
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<input id="add_new_task_button" type="button" class="btn" value="Добавить" >
+			 </div>
+		</div>
+		
+		<div>
+			<ol id="task-pull">
+				% for my $task ( @$tasks ) {
+					<li class="task">
+						<span class="desс" task_id="<%= $task->{'_id'} %>"><%= $task->{'task'} %></span>
+						<div class="date_add"><%= $task->{'date_add'} %></div>
+						<i class="task-icon task-remove-icon icon-remove" title="Удалить"></i>
+						<i class="task-icon task-complete-icon icon-ok" title="Выполнена"></i>
+					</li>
+				% }
+			</ol>
+		</div>
+	</div>
+</div>
+

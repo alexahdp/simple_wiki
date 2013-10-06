@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="/css/style.css">
 	%= stylesheet $_ for(@{stash('styles') || []});
 	
-	<script src="/js/lib/jquery-1.9.1.js"></script>
+	<script src="/js/lib/jquery-1.8.3.js"></script>
 	<script src="/js/lib/bootstrap.js"></script>
 	<script src="/js/lib/jquery.wysibb.min.js"></script>
 	<script src="/js/lib/alertify.min.js"></script>
@@ -25,7 +25,7 @@
 				<a class="brand" href="#">uid.me.dev</a>
 				<div class="nav-collapse collapse">
 					<ul class="nav">
-						% for (qw/wiki wall/) {
+						% for (qw/wiki wall tasks/) {
 							<li class="<%= current_route eq $_ ? 'active':''%>">
 								<a href="/<%=$_%>"><%=$_%></a>
 							</li>

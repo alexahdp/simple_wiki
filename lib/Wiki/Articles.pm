@@ -1,7 +1,6 @@
 package Wiki::Articles;
 use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
-use Mojo::JSON;
 use Mango::BSON::ObjectID;
 use  strict;
 use warnings;
@@ -41,7 +40,7 @@ sub add {
 	
 	$s->mango->db->collection('wall')->insert($wall_post);
 	
-	$s->render(json => {'success' => Mojo::JSON->true, url_title => $url_title});
+	$s->render(json => {'success' => $s->json->true, url_title => $url_title});
 }
 
 sub update {
@@ -51,13 +50,13 @@ sub update {
 		{_id => Mango::BSON::ObjectID->new($s->p('url_title'))},
 		{'$set' => { content => $content, date_update => time }}
 	);
-	$s->render(json => {'success' => Mojo::JSON->true});
+	$s->render(json => {'success' => $s->json->true});
 };
 
 sub remove {
 	my $s = shift;
 	$s->mango->db->collection('articles')->remove({'_id' => Mango::BSON::ObjectID->new($s->p('url_title'))});
-	$s->render(json => {'success' => Mojo::JSON->true});
+	$s->render(json => {'success' => $s->json->true});
 }
 
 1;

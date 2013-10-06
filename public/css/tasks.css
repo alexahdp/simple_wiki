@@ -1,0 +1,99 @@
+#add_task_form{
+    outline: solid thin;
+    outline-color: #D6D1D1;
+    padding: 5px;
+}
+
+#task-pull li.task{
+    position: relative;
+    min-height: 35px;
+    outline: solid thin;
+    outline-color: grey;
+    margin-top: 5px;
+    padding: 2px;
+    padding-left: 5px;
+    padding-bottom: 10px;
+    background-color: #fff;
+}
+
+#task-pull div.date_add{
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 8pt;
+    color: grey;
+}
+
+li.complete-task{
+    position: relative;
+    min-height: 20px;
+    outline: solid thin;
+    outline-color: grey;
+    margin-top: 4px;
+    padding: 2px;
+    padding-bottom: 15px;
+    padding-left: 5px;
+}
+
+li.complete-task:hover .task-icon{
+    display: block;
+}
+
+.complete-task div.date_complete{
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    color: grey;
+    font-size: 8pt;
+}
+
+.complete-button{
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: top;
+    width: 20px;
+    text-align: center;
+    background-image: none;
+    content: "&#x0029";
+}
+
+.task-icon{
+    position: absolute;
+    top: 2px;
+    width: 15px;
+    height: 15px;
+    color: green;
+    cursor: pointer;
+    float: right;
+    top: 2px;
+    right: 2px;
+    display: none;
+    background-color: #fff;
+}
+
+.task-remove-icon{
+    right: 2px;
+}
+
+#task-pull li.task:hover .task-icon{
+    display: block;
+}
+
+.task-complete-icon{
+    right: 15px;
+}
+
+#task-pull span.task_id{
+    display: none;
+}
+
+.task-uncomplete-icon{
+    right: 15px;
+}
+
+.edit_task_input{
+    width: 100%;
+    display: block;
+    position: relative;
+}

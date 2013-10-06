@@ -1,14 +1,16 @@
 package Wiki::Plugin::Helpers;
 use Mojo::Base 'Mojolicious::Plugin';
 use DateTime;
+use Mojo::JSON;
 
-use strict;
+#use strict;
 use warnings;
 
 
 sub register {
 	my($plugin, $app) = @_;
 	
+	$app->helper('json' => sub { Mojo::JSON->new });
 	$app->helper('p' => sub { my $s = shift; scalar $s->param(@_) });
 	
 	$app->helper('get_dt' => sub{
@@ -16,6 +18,12 @@ sub register {
 		my $dt = shift;
 		my $d = DateTime->from_epoch(epoch => $dt, time_zone => 'Europe/Moscow');
 		$d->hms.' '.$d->ymd('.');
+	});
+	
+	$app->helper('dmy' => sub{
+		my $s = shift;
+		my $dt = shift;
+		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->dmy('.');
 	});
 	
 	$app->helper('extend' => sub {
