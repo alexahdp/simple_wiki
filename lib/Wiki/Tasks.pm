@@ -11,8 +11,10 @@ use warnings;
 
 sub list{
 	my $s = shift;
+	my $uname = $s->p('exec') || $s->session('exec') || $s->stash('user')->{'username'};
+	$s->session(exec => $uname);
 	
-	my $complete_tasks_arr = $s->mango->db->collection('task')->find({'complete' => '1'})->all;
+	my $complete_tasks_arr = $s->mango->db->collection('task')->find({'complete' => '1', 'exec' => $uname})->all;
 	$complete_tasks_arr = [ map { $_->{'date_add'} = $s->dmy($_->{'date_add'}); $_; } @$complete_tasks_arr ];
 	my $complete_tasks = {};
 	for ( @$complete_tasks_arr ) {
@@ -22,21 +24,22 @@ sub list{
 			$complete_tasks->{ $_->{'date_add'} } = [$_];
 		}
 	}
-	my $tasks = $s->mango->db->collection('task')->find({complete => '0'})->all;
+	my $tasks = $s->mango->db->collection('task')->find({complete => '0', exec => $uname})->all;
 	
-	$s->render(template => 'tasks', complete_tasks => $complete_tasks, tasks => $tasks);
+	$s->render(template => 'tasks', complete_tasks => $complete_tasks, tasks => $tasks, exec => $uname);
 };
 
 
 sub create {
 	my $s = shift;
 	my $task = {
+		'exec'     => $s->session('exec'),
 		'date_add' => time,
 		'task'     => $s->p('task'),
 		'complete' => '0',
 	};
-	$s->mango->db->collection('task')->insert($task);
-	$s->render(json => {success => $s->json->true});
+	my $id = $s->mango->db->collection('task')->insert($task);
+	$s->render(json => {success => $s->json->true, id => $id});
 };
 
 
@@ -50,6 +53,7 @@ sub remove {
 sub update {
 	my $s = shift;
 	my $task = $s->req->params()->to_hash;
+	warn Dumper($task);
 	$s->mango->db->collection('task')->update(
 		{'_id' => Mango::BSON::ObjectID->new($s->p('id'))},
 		{'$set' => $task}

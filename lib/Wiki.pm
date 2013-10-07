@@ -44,7 +44,7 @@ sub startup {
 	$aub->post('/wall')->to('wall#add');
 	#$r->get('/:any') => sub{shift->redirect_to('wall#list')};
 	
-	$aub->get('/tasks')->to('tasks#list')->name('tasks');
+	$aub->get('/tasks/:uname')->to('tasks#list', 'uname' => undef)->name('tasks');
 	$aub->post('/tasks')->to('tasks#create');
 	$aub->put('/tasks/:id')->to('tasks#update');
 	$aub->delete('/tasks/:id')->to('tasks#remove');

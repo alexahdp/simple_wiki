@@ -1,28 +1,14 @@
 % layout 'default', title => 'Tasks', styles => ['/css/tasks.css'], scripts => ['/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/tasks.js'];
 
-<!--<div class="container">
-	<div class="breadcrumb">
-		
-		<span>Отображать задач: </span>
-		<select id="count_visible_tasks">
-			<option value="5">5</option>
-			<option value="10">10</option>
-			<option value="15">15</option>
-			<option value="20">20   </option>
-		</select>
-		
-		<span>Проект: </span>
-		<select>
-			<option value="project1">Project1</option>
-			<option value="project1">Project2</option>
-			<option value="project3">Project3</option>
-		</select>
-		
-		<input id="search_task" >
-	</div>
-</div>-->
-
 <div class="row show-grid">
+	<div class="span12">
+		<div class="btn-group">
+			% for (@{user_list()}) {
+				<a href="/tasks?exec=<%=$_->{username}%>" class="btn <%= $exec eq $_->{'username'} ? 'active':''%>"><%= $_->{'username'} %></a>
+			% }
+		</div>
+	</div>
+	
 	<div class="span6">
 	
 	% my $first = 1;
@@ -30,7 +16,7 @@
 		<div class="work-day <%= $first == 1 ? 'current':'' %>">
 			<div class="alert <% $first == 1 ? 'alert-success': 'alert-info';%>"><%= $date; %></div>
 			<ol>
-			% for my $task ( @{$complete_tasks->{$date}} ) {
+			% for my $task ( reverse sort {$a->{'date_complete'} <=> $a->{'date_complete'}} @{$complete_tasks->{$date}} ) {
 				<li class="complete-task">
 					<span task_id="<%= $task->{'_id'}; %>"><%= $task->{'task'}; %></span>
 					<div class="date_complete"><%= $task->{'date_complete'}; %></div>
@@ -73,4 +59,3 @@
 		</div>
 	</div>
 </div>
-

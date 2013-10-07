@@ -101,10 +101,10 @@ $(document).ready(function(){
 	
 	
 	//кнопка задача выполнена
-	$('.task-complete-icon').on('click', function(){
+	$(document).on('click', '.task-complete-icon', function(){
 		var task = $(this).parent();
 		var id = task.children('span').attr('task_id');
-		var data_t = {'complete': 1};
+		var data_t = {'complete': 1, 'date_complete': Math.floor(new Date().getTime() / 1000)};
 		$.ajax({
 			url: '/tasks/' + id,
 			type: 'put',
@@ -175,9 +175,9 @@ $(document).ready(function(){
 		var task = $(this).parent();
 		var id = task.children('span').attr('task_id');
 		$.ajax({
-			url: '/tasks/complete',
-			type: 'post',
-			data: {task_id: id, complete: 0},
+			url: '/tasks/' + id,
+			type: 'put',
+			data: {complete: '0'},
 			dataType: 'json',
 			success: function(answ){
 				if(answ.success){

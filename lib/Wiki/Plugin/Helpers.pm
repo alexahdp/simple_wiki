@@ -26,6 +26,11 @@ sub register {
 		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->dmy('.');
 	});
 	
+	$app->helper('user_list' => sub {
+		my $s = shift;
+		$s->mango->db->collection('user')->find()->all;
+	});
+	
 	$app->helper('extend' => sub {
 		my ($def, $extended_object) = @_;
 		my $default_object = {%$def};

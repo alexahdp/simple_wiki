@@ -2,6 +2,7 @@ package Wiki::User;
 use Mojo::Base 'Mojolicious::Controller';
 use Encode 'encode';
 use Digest::MD5 'md5_hex';
+use Mango::BSON::ObjectID;
 
 use strict;
 use warnings;
@@ -43,9 +44,9 @@ sub _rules {
 sub auth_bridge {
 	my $s = shift;
 	if ($s->session('user_id')) {
-		my $user = $s->mango->db->collection('user')->find_one({'_id' => $s->session('user_id')});
+		my $user = $s->mango->db->collection('user')->find_one({'_id' => Mango::BSON::ObjectID->new($s->session('user_id'))});
 		
-		$s->stash(user => $user);
+		$s->stash('user' => $user);
 		return 1;
 	}
 	$s->redirect_to('/login');
@@ -67,7 +68,7 @@ sub login {
 		if ($user->{'active'} == 0) {
 			return $s->render('wait_active');
 		}
-		$s->session(user_id => $user->{_id});
+		$s->session('user_id' => $user->{'_id'});
 		$s->redirect_to('/wiki');
 	} else {
 		$s->render(template => 'login', email => $s->p('email'), warnings => 'Неверный email или пароль');
