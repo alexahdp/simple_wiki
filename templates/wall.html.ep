@@ -1,5 +1,6 @@
 % layout 'default', title => 'Wall', styles => ['/css/wall.css'];
 
+% if ($page == 1) {
 <div style="position: relative; margin: 0 auto; width: 400px">
 	<form class="" method="post" action="/wall">
 		<textarea name="post" rows="4" cols="25" class="input-block-level"></textarea>
@@ -8,6 +9,7 @@
 		</div>
 	</form>
 </div>
+% }
 
 <div id="wall" style="position: relative; margin: 0 auto; width: 600px">
 	% for my $post( @$posts ) {
@@ -22,14 +24,15 @@
 	% }
 </div>
 
+
+% if ($all > 1) {
 <div class="pagination pagination-centered">
 	<ul>
-		<li class="disabled"><a href="#">«</a></li>
-		<li class="active"><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">»</a></li>
+		<li class="<%= $page == 1 ? 'disabled' : ''%>"><a href="#">«</a></li>
+		% for my $page_num (1..$all) {
+			<li class="<%= $page_num == $page ? 'active':'' %>"><a href="/wall/<%= $page_num %>"><%= $page_num %></a></li>
+		% }
+		<li class="<%= $page == $all ? 'disabled' : ''%>"><a href="#">»</a></li>
 	</ul>
 </div>
+% }

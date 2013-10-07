@@ -40,7 +40,7 @@ sub startup {
 	$aub->put('/wiki/:url_title')->to('articles#update');
 	$aub->delete('/wiki/:url_title')->to('articles#remove');
 	
-	$aub->get('/wall')->to('wall#list')->name('wall');
+	$aub->get('/wall/:page')->to('wall#list', page => 1)->name('wall');
 	$aub->post('/wall')->to('wall#add');
 	#$r->get('/:any') => sub{shift->redirect_to('wall#list')};
 	
