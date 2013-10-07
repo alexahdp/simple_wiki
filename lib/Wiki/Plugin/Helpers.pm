@@ -13,17 +13,23 @@ sub register {
 	$app->helper('json' => sub { Mojo::JSON->new });
 	$app->helper('p' => sub { my $s = shift; scalar $s->param(@_) });
 	
-	$app->helper('get_dt' => sub{
-		my $s = shift;
-		my $dt = shift;
-		my $d = DateTime->from_epoch(epoch => $dt, time_zone => 'Europe/Moscow');
-		$d->hms.' '.$d->ymd('.');
-	});
-	
 	$app->helper('dmy' => sub{
 		my $s = shift;
 		my $dt = shift;
 		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->dmy('.');
+	});
+	
+	$app->helper('hms' => sub{
+		my $s = shift;
+		my $dt = shift;
+		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->hms(':');
+	});
+	
+	$app->helper('dmyhms' => sub{
+		my $s = shift;
+		my $dt = shift;
+		
+		$s->dmy($dt)." ".$s->hms($dt);
 	});
 	
 	$app->helper('user_list' => sub {

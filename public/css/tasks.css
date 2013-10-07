@@ -97,3 +97,7 @@ li.complete-task:hover .task-icon{
     display: block;
     position: relative;
 }
+
+#user-navigation-container{
+    margin-bottom: 20px;
+}

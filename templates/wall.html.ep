@@ -16,7 +16,7 @@
 		<div class="wall-post">
 			<div class="post-header">
 				<span class="post-author"><%= $post->{'author'} %></span>
-				<span class="post-date"><%= get_dt($post->{'date_add'}) %></span>
+				<span class="post-date"><%= dmyhms($post->{'date_add'}) %></span>
 			</div>
 			<div class="post-content"><%= $post->{'content'} %></div>
 			<div class="post-footer"></div>
