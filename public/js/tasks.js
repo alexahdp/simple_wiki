@@ -89,10 +89,10 @@ $(document).ready(function(){
 			}
 			//сохранять порядок задач после сортировки
 			$.ajax({
-				url: '/taskss',
-				type: 'put',
+				url: '/task_sort',
+				type: 'post',
 				dataType: 'json',
-				data: {'task_index': JSON.stringify(task_index)},
+				data: {'task_order': JSON.stringify(task_index)},
 				success: function(result){},
 				error: function(){}
 			});
@@ -150,7 +150,7 @@ $(document).ready(function(){
 	
 	
 	//кнопка удалить задачу
-	$('.task-remove-icon').on('click', function(){
+	$(document).on('click', '.task-remove-icon', function(){
 		var task = $(this).parent();
 		var id = task.children('span').attr('task_id');
 		$.ajax({

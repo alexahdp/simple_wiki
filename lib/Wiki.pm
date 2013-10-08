@@ -48,6 +48,7 @@ sub startup {
 	$aub->post('/tasks')->to('tasks#create');
 	$aub->put('/tasks/:id')->to('tasks#update');
 	$aub->delete('/tasks/:id')->to('tasks#remove');
+	$aub->post('/task_sort')->to('tasks#sort');
 	
 	$r->get('/' => sub {shift->redirect_to('/login')});
 #	$r->get('/(*any)') => sub { shift->redirect_to('/login');  };
