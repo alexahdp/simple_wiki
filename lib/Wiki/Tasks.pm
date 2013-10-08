@@ -9,7 +9,7 @@ use strict;
 use warnings;
 
 
-sub list{
+sub list {
 	my $s = shift;
 	my $uname = $s->p('exec') || $s->session('exec') || $s->stash('user')->{'username'};
 	$s->session(exec => $uname);

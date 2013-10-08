@@ -9,7 +9,8 @@ sub list {
 	my $s = shift;
 	
 	$s->render(
-		'articles' => $s->mango->db->collection('articles')->find->all || [],
+		template     => 'wiki',
+		'articles'   => $s->mango->db->collection('articles')->find->all || [],
 		'url_title'  => $s->p('url_title') || ''
 	);
 }

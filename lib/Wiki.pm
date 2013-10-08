@@ -50,9 +50,9 @@ sub startup {
 	$aub->delete('/tasks/:id')->to('tasks#remove');
 	$aub->post('/task_sort')->to('tasks#sort');
 	
+	$aub->get('/discussion')->to('discussion#list')->name('discussion');
+	
 	$r->get('/' => sub {shift->redirect_to('/login')});
-#	$r->get('/(*any)') => sub { shift->redirect_to('/login');  };
-
 }
 
 1;
