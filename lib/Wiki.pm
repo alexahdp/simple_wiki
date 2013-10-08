@@ -34,8 +34,7 @@ sub startup {
 	# Authentication bridge
 	my $aub = $r->bridge->to('user#auth_bridge');
 	
-	$aub->get('/wiki/:url_title')->to('articles#list')->name('wiki');
-	$aub->get('/wiki')->to('articles#list');
+	$aub->get('/wiki/:url_title')->to('articles#list', url_title => undef)->name('wiki');
 	$aub->post('/wiki')->to('articles#add');
 	$aub->put('/wiki/:url_title')->to('articles#update');
 	$aub->delete('/wiki/:url_title')->to('articles#remove');
@@ -50,7 +49,9 @@ sub startup {
 	$aub->delete('/tasks/:id')->to('tasks#remove');
 	$aub->post('/task_sort')->to('tasks#sort');
 	
-	$aub->get('/discussion')->to('discussion#list')->name('discussion');
+	$aub->get('/discussion/:url_title')->to('discussion#list', url_title => undef)->name('discussion');
+	$aub->post('/discussion')->to('discussion#create');
+	$aub->post('/discussion/add_answer/:url_title')->to('discussion#add_answer');
 	
 	$r->get('/' => sub {shift->redirect_to('/login')});
 }

@@ -25,7 +25,7 @@
 				<a class="brand" href="#">uid.me.dev</a>
 				<div class="nav-collapse collapse">
 					<ul class="nav">
-						% for (qw/wiki wall tasks/) {
+						% for (qw/wiki wall tasks discussion/) {
 							<li class="<%= current_route eq $_ ? 'active':''%>">
 								<a href="/<%=$_%>"><%=$_%></a>
 							</li>
