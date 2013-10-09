@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ADDR="127.0.0.1:3001"
+ADDR="127.0.0.1:8915"
 
 #ps auxww | grep -F $ADDR | grep -v 'grep' | perl -l12ane 'print /(\d+)/' | kill `cat`
 

@@ -10,6 +10,10 @@ use warnings;
 # This method will run once at server start
 sub startup {
 	my $self = shift;
+
+	$self->secret('Kds7_adH3hs7h4KHsh_Hs2ox');
+        $self->sessions->default_expiration(86400 * 30);
+
 	
 	# Documentation browser under "/perldoc"
 	#$self->plugin('PODRenderer');

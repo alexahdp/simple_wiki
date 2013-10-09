@@ -4,7 +4,7 @@ $(function(){
 	 var wb = $('.article-content-edit textarea').wysibb({
 		smileList: '',
 		minHeight: 400,
-		buttons: "bold,italic,underline,|,img,link,|,code,quote"
+		//buttons: "bold,italic,underline,|,img,link,|,code,quote"
 	});
 	
 	$('.article-edit').click(function(){

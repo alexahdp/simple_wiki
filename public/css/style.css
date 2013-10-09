@@ -21,6 +21,10 @@ body{
 	cursor: pointer;
 }
 
+.article-content{
+	line-height: 2em;
+}
+
 .article-content-edit{
 	display: none;
 }

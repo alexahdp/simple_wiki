@@ -1,3 +1,4 @@
+% use HTML::BBCode;
 % layout 'default', title => 'Wall', styles => ['/css/wall.css'];
 
 % if ($page == 1) {
@@ -18,7 +19,8 @@
 				<span class="post-author"><%= $post->{'author'} %></span>
 				<span class="post-date"><%= dmyhms($post->{'date_add'}) %></span>
 			</div>
-			<div class="post-content"><%= $post->{'content'} %></div>
+	                % my $bbc  = HTML::BBCode->new({linebreaks => 1});
+			<div class="post-content"><%== $bbc->parse($post->{'content'}) %></div>
 			<div class="post-footer"></div>
 		</div>
 	% }
