@@ -1,0 +1,44 @@
+% layout 'default', title => 'Discussions', scripts => ['/js/discussions.js'];
+
+<div class="span2">
+	<ul class="article-titles nav nav-pills nav-stacked">
+	% for (@$discussions) {
+		<li data-id="<%= $_->{'_id'} %>" class="<%= $_->{'url_title'} eq $url_title ? 'active':''%>">
+			<a href="/discussion/<%= $_->{'url_title'} %>"><%= $_->{'title'} %></a>
+			<span class="article-remove icon-remove"></span>
+		</li>
+	% }
+	</ul>
+	<div class="new-discussion but">Создать</div>
+</div>
+
+% if( stash('url_title') ) {
+<div class="span8">
+	<div style="position: relative; margin: 0 auto; width: 400px">
+		<form method="post" action="/discussion/add_answer/<%= $url_title %>">
+			<textarea name="new-answer" rows="5" class="input-block-level"></textarea>
+			<div class="text-right">
+				<button class="btn btn-primary" type="submit">Add</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div id="discussion" style="position: relative; margin: 0 auto; width: 600px">
+	% for my $answer( @{$discussion->{'answers'}} ) {
+		<div class="answer">
+			<div class="answer-header">
+				<span class="answer-author"><%= $answer->{'author'} %></span>
+				<span class="answer-date"><%= dmyhms($answer->{'date_add'}) %></span>
+			</div>
+			<div class="answer-content"><%= $answer->{'content'} %></div>
+			<div class="answer-footer"></div>
+		</div>
+	% }
+</div>
+
+% } else {
+<div class="span8">
+	<h3>No selected discussions</h3>
+</div>
+% }

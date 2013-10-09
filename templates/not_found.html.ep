@@ -1,0 +1,6 @@
+% layout 'default', title => '404';
+
+<div class="offset2">
+<h1>404</h1>
+<h4>Page not Found</h4>
+</div>

@@ -9,7 +9,7 @@ use strict;
 use warnings;
 
 
-sub list{
+sub list {
 	my $s = shift;
 	my $uname = $s->p('exec') || $s->session('exec') || $s->stash('user')->{'username'};
 	$s->session(exec => $uname);
@@ -53,7 +53,7 @@ sub remove {
 sub update {
 	my $s = shift;
 	my $task = $s->req->params()->to_hash;
-	warn Dumper($task);
+	
 	$s->mango->db->collection('task')->update(
 		{'_id' => Mango::BSON::ObjectID->new($s->p('id'))},
 		{'$set' => $task}
@@ -61,5 +61,18 @@ sub update {
 	$s->render(json => {'success' => $s->json->true});
 };
 
+sub sort {
+	my $s = shift;
+	
+	my $task_indexes = Mojo::JSON->decode($s->p('task_order'));
+	warn Dumper($task_indexes);
+	for (@$task_indexes) {
+		$s->mango->db->collection('task')->update(
+			{ _id => Mango::BSON::ObjectID->new($_->{'id'}) },
+			{ '$set' => {index => $_->{'index'}} }
+		);
+	}
+	$s->render(json => {success => $s->json->true});
+};
 
 1;

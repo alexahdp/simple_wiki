@@ -47,7 +47,7 @@
 		
 		<div>
 			<ol id="task-pull">
-				% for my $task ( @$tasks ) {
+				% for my $task ( sort {$a->{'index'} <=> $b->{'index'}} @$tasks ) {
 					<li class="task">
 						<span class="desс" task_id="<%= $task->{'_id'} %>"><%= $task->{'task'} %></span>
 						<div class="date_add"><%= dmyhms($task->{'date_add'}) %></div>

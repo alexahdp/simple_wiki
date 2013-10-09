@@ -9,7 +9,8 @@ sub list {
 	my $s = shift;
 	
 	$s->render(
-		'articles' => $s->mango->db->collection('articles')->find->all || [],
+		template     => 'wiki',
+		'articles'   => $s->mango->db->collection('articles')->find->all || [],
 		'url_title'  => $s->p('url_title') || ''
 	);
 }
@@ -46,6 +47,8 @@ sub add {
 sub update {
 	my $s = shift;
 	my $content = $s->p('content');
+	
+	# КАК ЭТО РАБОТАЕТ?!?!?! КАКОЙ-ТО ПИЗДЕЦ
 	$s->mango->db->collection('articles')->update(
 		{_id => Mango::BSON::ObjectID->new($s->p('url_title'))},
 		{'$set' => { content => $content, date_update => time }}

@@ -4,12 +4,12 @@
 
 <div class="span2">
 	<ul class="article-titles nav nav-pills nav-stacked">
-	<% for (@$articles) { %>
+	% for (@$articles) {
 		<li data-id="<%= $_->{'_id'} %>" class="<%= $_->{'url_title'} eq $url_title ? 'active':''%>">
 			<a href="/wiki/<%= $_->{'url_title'} %>"><%= $_->{'title'} %></a>
 			<span class="article-remove icon-remove"></span>
 		</li>
-	<% } %>
+	% }
 	</ul>
 	<div class="add-article but">Создать</div>
 </div>
