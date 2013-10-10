@@ -12,7 +12,7 @@
 	<div class="span6">
 	
 	% my $first = 1;
-	% for my $date ( keys %$complete_tasks ) {
+	% for my $date ( reverse sort keys %$complete_tasks ) {
 		<div class="work-day <%= $first == 1 ? 'current':'' %>">
 			<div class="alert <% $first == 1 ? 'alert-success': 'alert-info';%>"><%= $date; %></div>
 			<ol>

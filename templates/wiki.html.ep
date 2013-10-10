@@ -28,7 +28,7 @@
 	<div class="article-id"><%= $current->{'_id'} %></div>
 	<h3><%= $current->{'title'} %></h3>
 	<div class="article-content">
-		% my $bbc  = HTML::BBCode->new({linebreaks => 1});
+		% my $bbc  = HTML::BBCode->new({linebreaks => 1 });
 		<%== $bbc->parse($current->{'content'}) %>
 	</div>
 	

@@ -47,7 +47,7 @@ sub add_answer {
 		text     => $s->p('answer'),
 	};
 	
-	$s->mango->db->collection('discussion')->insert(
+	$s->mango->db->collection('discussion')->update(
 		{ 'url_title' => $url_title             },
 		{ '$push'     => { answers => $answer } }
 	);

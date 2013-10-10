@@ -1,4 +1,4 @@
-% layout 'default', title => 'Discussions', scripts => ['/js/discussions.js'];
+% layout 'default', title => 'Discussions', scripts => ['/js/discussions.js'], styles => ['/css/discussion.css'];
 
 <div class="span2">
 	<ul class="article-titles nav nav-pills nav-stacked">
@@ -16,25 +16,25 @@
 <div class="span8">
 	<div style="position: relative; margin: 0 auto; width: 400px">
 		<form method="post" action="/discussion/add_answer/<%= $url_title %>">
-			<textarea name="new-answer" rows="5" class="input-block-level"></textarea>
+			<textarea name="answer" rows="5" class="input-block-level"></textarea>
 			<div class="text-right">
 				<button class="btn btn-primary" type="submit">Add</button>
 			</div>
 		</form>
 	</div>
-</div>
-
-<div id="discussion" style="position: relative; margin: 0 auto; width: 600px">
-	% for my $answer( @{$discussion->{'answers'}} ) {
-		<div class="answer">
-			<div class="answer-header">
-				<span class="answer-author"><%= $answer->{'author'} %></span>
-				<span class="answer-date"><%= dmyhms($answer->{'date_add'}) %></span>
+	
+	<div id="discussion" style="margin: 0 auto; width: 600px">
+		% for my $answer( @{$discussion->{'answers'}} ) {
+			<div class="answer">
+				<div class="answer-header">
+					<span class="answer-author"><%= $answer->{'author'} %></span>
+					<span class="answer-date"><%= dmyhms($answer->{'date_add'}) %></span>
+				</div>
+				<div class="answer-content"><%= $answer->{'text'} %></div>
+				<div class="answer-footer"></div>
 			</div>
-			<div class="answer-content"><%= $answer->{'content'} %></div>
-			<div class="answer-footer"></div>
-		</div>
-	% }
+		% }
+	</div>
 </div>
 
 % } else {
