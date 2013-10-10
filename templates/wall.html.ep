@@ -19,7 +19,7 @@
 				<span class="post-author"><%= $post->{'author'} %></span>
 				<span class="post-date"><%= dmyhms($post->{'date_add'}) %></span>
 			</div>
-	                % my $bbc  = HTML::BBCode->new({linebreaks => 1});
+			% my $bbc  = HTML::BBCode->new({linebreaks => 1});
 			<div class="post-content"><%== $bbc->parse($post->{'content'}) %></div>
 			<div class="post-footer"></div>
 		</div>
@@ -27,14 +27,14 @@
 </div>
 
 
-% if ($all > 1) {
+% if ($total > 1) {
 <div class="pagination pagination-centered">
 	<ul>
 		<li class="<%= $page == 1 ? 'disabled' : ''%>"><a href="#">«</a></li>
-		% for my $page_num (1..$all) {
+		% for my $page_num (1..$total) {
 			<li class="<%= $page_num == $page ? 'active':'' %>"><a href="/wall/<%= $page_num %>"><%= $page_num %></a></li>
 		% }
-		<li class="<%= $page == $all ? 'disabled' : ''%>"><a href="#">»</a></li>
+		<li class="<%= $page == $total ? 'disabled' : ''%>"><a href="#">»</a></li>
 	</ul>
 </div>
 % }

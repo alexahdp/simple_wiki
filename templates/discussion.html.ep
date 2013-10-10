@@ -12,11 +12,11 @@
 	<div class="new-discussion but">Создать</div>
 </div>
 
-% if( stash('url_title') ) {
+% if( defined $discussion ) {
 <div class="span8">
 	<div style="position: relative; margin: 0 auto; width: 400px">
-		<form method="post" action="/discussion/add_answer/<%= $url_title %>">
-			<textarea name="answer" rows="5" class="input-block-level"></textarea>
+		<form id="answer-form" method="post" action="/discussion/add_answer/<%= $url_title %>">
+			<textarea id="answer-text" name="answer" rows="5" class="input-block-level" autofocus></textarea>
 			<div class="text-right">
 				<button class="btn btn-primary" type="submit">Add</button>
 			</div>
@@ -37,8 +37,15 @@
 	</div>
 </div>
 
+
 % } else {
-<div class="span8">
-	<h3>No selected discussions</h3>
-</div>
+	% if($url_title ne '') {
+	<div class="span8">
+		<h3>There isn't discussion with title "<%=$url_title%>"</h3>
+	</div>
+	% } else {
+	<div class="span8">
+		<h3>No selected discussions</h3>
+	</div>
+	% }
 % }

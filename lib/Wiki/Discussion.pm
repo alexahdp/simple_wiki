@@ -3,12 +3,13 @@ use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
 use Mojo::JSON;
 use Mango::BSON::ObjectID;
+use utf8;
 
 use strict;
 use warnings;
 
 
-sub list {
+sub index {
 	my $s = shift;
 	
 	my $discussions = $s->mango->db->collection('discussion')->find()->all;
@@ -22,12 +23,22 @@ sub list {
 	);
 };
 
+
 sub create {
 	my $s = shift;
+	my $url_title = lc $s->win2translit($s->trim($s->p('title')));
+	
+	unless (length $s->p('title') > 3 && $s->p('title') =~ /^[\w_]+$/) {
+		$s->render(json => { 'success' => $s->json->false, msg => 'invalid discussion title' });
+	}
+	
+	if ($s->mango->db->collection('discusson')->find_one({url_title => $url_title})) {
+		$s->render(json => { 'success' => $s->json->false, msg => 'discussion already exists' });
+	}
 	
 	my $discussion = {
 		title     => $s->p('title'),
-		url_title => lc $s->win2translit($s->p('title')),
+		url_title => $url_title,
 		author    => $s->stash('user')->{'username'},
 		date_add  => time,
 		answers   => [],

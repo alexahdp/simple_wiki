@@ -47,11 +47,14 @@ sub add {
 sub update {
 	my $s = shift;
 	my $content = $s->p('content');
+	my $id = Mango::BSON::ObjectID->new($s->p('id'));
 	
-	# КАК ЭТО РАБОТАЕТ?!?!?! КАКОЙ-ТО ПИЗДЕЦ
+	my $article = $s->mango->db->collection('articles')->find_one({_id => $id});
+	my $all_versions = $s->mango->db->collection('articles')->find({ url_title => $article->{url_title} })->all;
+	
 	$s->mango->db->collection('articles')->update(
-		{_id => Mango::BSON::ObjectID->new($s->p('url_title'))},
-		{'$set' => { content => $content, date_update => time }}
+		{_id => Mango::BSON::ObjectID->new($s->p('id'))         },
+		{'$set' => { content => $content, date_update => time } }
 	);
 	$s->render(json => {'success' => $s->json->true});
 };

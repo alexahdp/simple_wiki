@@ -13,6 +13,12 @@ sub register {
 	$app->helper('json' => sub { Mojo::JSON->new });
 	$app->helper('p' => sub { my $s = shift; scalar $s->param(@_) });
 	
+	$app->helper(trim => sub {
+		my $s = shift;
+		my $str = shift;
+		$str =~ s/^\s+//; $str =~ s/\s+$//; $str;
+	});
+	
 	$app->helper('dmy' => sub{
 		my $s = shift;
 		my $dt = shift;

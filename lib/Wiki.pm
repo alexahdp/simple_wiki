@@ -6,14 +6,14 @@ use  strict;
 use warnings;
 
 #has db => sub { Mango->new('mongodb://localhost:27017')->db('wiki'); };
+has conf => sub { do "config/wiki.conf" };
 
 # This method will run once at server start
 sub startup {
 	my $self = shift;
-
-	$self->secret('Kds7_adH3hs7h4KHsh_Hs2ox');
-        $self->sessions->default_expiration(86400 * 30);
-
+	
+	$self->secret($self->conf->{session}{secret});
+	$self->sessions->default_expiration($self->conf->{session}{expiration});
 	
 	# Documentation browser under "/perldoc"
 	#$self->plugin('PODRenderer');
@@ -21,7 +21,7 @@ sub startup {
 	$self->plugin('DefaultHelpers');
 	$self->plugin('Wiki::Plugin::Helpers');
 	
-	$self->helper(mango => sub { state $mango = Mango->new('mongodb://localhost:27017/wiki') });
+	$self->helper(mango => sub { state $mango = Mango->new( $self->conf->{db}{address} ) });
 	#$self->helper(db => sub { my $s = shift; $s->app->db;});
 	#$self->helper(db => sub { $self->db });
 	
@@ -40,7 +40,7 @@ sub startup {
 	
 	$aub->get('/wiki/:url_title')->to('articles#list', url_title => undef)->name('wiki');
 	$aub->post('/wiki')->to('articles#add');
-	$aub->put('/wiki/:url_title')->to('articles#update');
+	$aub->put('/wiki/:id')->to('articles#update');
 	$aub->delete('/wiki/:url_title')->to('articles#remove');
 	
 	$aub->get('/wall/:page')->to('wall#list', page => 1)->name('wall');
@@ -53,7 +53,7 @@ sub startup {
 	$aub->delete('/tasks/:id')->to('tasks#remove');
 	$aub->post('/task_sort')->to('tasks#sort');
 	
-	$aub->get('/discussion/:url_title')->to('discussion#list', url_title => undef)->name('discussion');
+	$aub->get('/discussion/:url_title')->to('discussion#index', url_title => undef)->name('discussion');
 	$aub->post('/discussion')->to('discussion#create');
 	$aub->post('/discussion/add_answer/:url_title')->to('discussion#add_answer');
 	

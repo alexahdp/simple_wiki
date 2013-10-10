@@ -11,18 +11,18 @@ use warnings;
 
 sub list {
 	my $s = shift;
-	my $count = 3;
+	my $count = 10;
 	my $page = $s->p('page');
 	
 	my $posts = [ reverse sort {$a->{date_add} <=> $b->{date_add}} @{$s->mango->db->collection('wall')->find->all || []} ];
 	
-	my $all = ceil(@$posts / $count);
+	my $total = ceil(@$posts / $count);
 	
 	$posts = [splice @$posts, ($page - 1) * $count, $count];
 	$s->render(
 		template => 'wall',
 		'posts'  => $posts,
-		'all'    => $all,
+		'total'  => $total,
 		'page'   => $page,
 	);
 };
