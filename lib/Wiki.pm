@@ -12,6 +12,7 @@ has conf => sub { do "config/wiki.conf" };
 sub startup {
 	my $self = shift;
 	
+	$self->mode('development');
 	$self->secret($self->conf->{session}{secret});
 	$self->sessions->default_expiration($self->conf->{session}{expiration});
 	

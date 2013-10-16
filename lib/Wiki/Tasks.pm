@@ -15,13 +15,13 @@ sub list {
 	$s->session(exec => $uname);
 	
 	my $complete_tasks_arr = $s->mango->db->collection('task')->find({'complete' => '1', 'exec' => $uname})->all;
-	$complete_tasks_arr = [ map { $_->{'date_add'} = $s->dmy($_->{'date_add'}); $_; } @$complete_tasks_arr ];
+	$complete_tasks_arr = [ map { $_->{'date_complete_dmy'} = $s->dmy($_->{'date_complete'}); $_; } @$complete_tasks_arr ];
 	my $complete_tasks = {};
 	for ( @$complete_tasks_arr ) {
-		if (defined $complete_tasks->{ $_->{'date_add'} }) {
-			$complete_tasks->{ $_->{'date_add'} } = [(@{$complete_tasks->{ $_->{'date_add'} }}, $_)];
+		if (defined $complete_tasks->{ $_->{'date_complete_dmy'} }) {
+			$complete_tasks->{ $_->{'date_complete_dmy'} } = [(@{$complete_tasks->{ $_->{'date_complete_dmy'} }}, $_)];
 		} else {
-			$complete_tasks->{ $_->{'date_add'} } = [$_];
+			$complete_tasks->{ $_->{'date_complete_dmy'} } = [$_];
 		}
 	}
 	my $tasks = $s->mango->db->collection('task')->find({complete => '0', exec => $uname})->all;

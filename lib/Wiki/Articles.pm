@@ -49,6 +49,9 @@ sub update {
 	my $content = $s->p('content');
 	my $id = Mango::BSON::ObjectID->new($s->p('id'));
 	
+	# Надо узнать номер последней версии (n)
+	# Удалить самую старую версию и добавить новую версию n+1
+	
 	my $article = $s->mango->db->collection('articles')->find_one({_id => $id});
 	my $all_versions = $s->mango->db->collection('articles')->find({ url_title => $article->{url_title} })->all;
 	

@@ -10,7 +10,6 @@
 	</div>
 	
 	<div class="span6">
-	
 	% my $first = 1;
 	% for my $date ( reverse sort keys %$complete_tasks ) {
 		<div class="work-day <%= $first == 1 ? 'current':'' %>">

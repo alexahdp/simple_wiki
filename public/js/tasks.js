@@ -29,7 +29,7 @@ Date.prototype.getDateDMY = function(){
  * Получить дату и время в виде: HH:mm dd.mm.yyyy
  */
 Date.prototype.getDateFull = function(){
-	return (this.getTimeHM()+" "+this.getDateDMY());
+	return (this.getDateDMY()+" "+this.getTimeHM());
 };
 
 

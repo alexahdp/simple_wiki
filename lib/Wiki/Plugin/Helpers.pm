@@ -28,7 +28,8 @@ sub register {
 	$app->helper('hms' => sub{
 		my $s = shift;
 		my $dt = shift;
-		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->hms(':');
+		#DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->hms(':');
+		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->hour.":".DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->minute;
 	});
 	
 	$app->helper('dmyhms' => sub{
