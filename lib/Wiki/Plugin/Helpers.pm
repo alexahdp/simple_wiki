@@ -55,6 +55,8 @@ sub register {
 	});
 	
 	$app->helper('extend' => sub {
+		my $s = shift;
+		
 		my ($def, $extended_object) = @_;
 		my $default_object = {%$def};
 		foreach ( keys %{$extended_object} ){

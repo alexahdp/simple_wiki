@@ -40,7 +40,7 @@ sub startup {
 	my $aub = $r->bridge->to('user#auth_bridge');
 	
 	$aub->get('/wiki/:url_title')->to('articles#list', url_title => undef)->name('wiki');
-	$aub->post('/wiki')->to('articles#add');
+	$aub->post('/wiki')->to('articles#create');
 	$aub->put('/wiki/:id')->to('articles#update');
 	$aub->delete('/wiki/:url_title')->to('articles#remove');
 	
