@@ -2,25 +2,38 @@ package Wiki::Articles;
 use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
 use Mango::BSON::ObjectID;
-use  strict;
+use Mango::Collection;
+use Mango::Cursor;
+use strict;
 use warnings;
 
 sub list {
 	my $s = shift;
 	
+	my $collection = Mango::Collection->new(db => $s->mango->db)->name('articles');
+	my $res = $collection->aggregate([{'$group' => {_id => '$url_title', ver => {'$max' => '$version'}}}]);
+	my $articles = [map {
+		warn Dumper($_);
+		$s->mango->db->collection('articles')->find_one({url_title => $_->{'_id'}, version => $_->{ver}});
+	} @$res];
+	
+	#my $articles = $s->mango->db->collection('articles')->find->all || [];
 	$s->render(
 		template     => 'wiki',
-		'articles'   => $s->mango->db->collection('articles')->find->all || [],
+		'articles'   => $articles,
 		'url_title'  => $s->p('url_title') || ''
 	);
 }
 
 sub add {
 	my $s = shift;
-	
-	my $u = {username => 'alex'};
+	my $u = $s->stash('user');
 	
 	my $url_title = lc $s->win2translit($s->p('title'));
+	
+	if ($s->mango->db->collection('articles')->find_one({url_title => $url_title})) {
+		return $s->render(json => {'success' => $s->json->false, msg => 'Article with this title already exists'});
+	}
 	
 	my $article = {
 		author      => $u->{'username'},
@@ -28,7 +41,8 @@ sub add {
 		url_title   => $url_title,
 		date_add    => time,
 		date_update => time,
-		content     => $s->p('content') || ""
+		content     => $s->p('content') || "",
+		version     => 0,
 	};
 	
 	$s->mango->db->collection('articles')->insert($article);
@@ -49,16 +63,27 @@ sub update {
 	my $content = $s->p('content');
 	my $id = Mango::BSON::ObjectID->new($s->p('id'));
 	
-	# Надо узнать номер последней версии (n)
-	# Удалить самую старую версию и добавить новую версию n+1
-	
+	# у меня есть только id, поэтому надо получить url_title
 	my $article = $s->mango->db->collection('articles')->find_one({_id => $id});
-	my $all_versions = $s->mango->db->collection('articles')->find({ url_title => $article->{url_title} })->all;
+	if (not $article) {
+		return $s->render(json => {'success' => $s->json->false});
+	}
 	
-	$s->mango->db->collection('articles')->update(
-		{_id => Mango::BSON::ObjectID->new($s->p('id'))         },
-		{'$set' => { content => $content, date_update => time } }
-	);
+	# 
+	my $all_versions = $s->mango->db->collection('articles')->find({ url_title => $article->{url_title} })->sort({version => -1})->all;
+	
+	my $new_article = $all_versions->[(length @$all_versions) - 1];
+	$new_article->{'content'} = $content;
+	$new_article->{'date_update'} = time;
+	$new_article->{version}++;
+	delete $new_article->{_id};
+	
+	$s->mango->db->collection('articles')->insert($new_article);
+	
+	if (@$all_versions > 3) {
+		$s->mango->db->collection('articles')->remove({_id => Mango::BSON::ObjectID->new($all_versions->[0]->{_id})});
+	}
+	
 	$s->render(json => {'success' => $s->json->true});
 };
 
