@@ -25,17 +25,27 @@ sub register {
 		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->dmy('.');
 	});
 	
+	$app->helper('hm' => sub{
+		my $s = shift;
+		my $dt = shift;
+		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->hour.":".DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->minute;
+	});
+	
 	$app->helper('hms' => sub{
 		my $s = shift;
 		my $dt = shift;
-		#DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->hms(':');
-		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->hour.":".DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->minute;
+		DateTime->from_epoch('epoch' => $dt, time_zone => 'Europe/Moscow')->hms(':');
+	});
+	
+	$app->helper('dmyhm' => sub{
+		my $s = shift;
+		my $dt = shift;
+		$s->dmy($dt)." ".$s->hm($dt);
 	});
 	
 	$app->helper('dmyhms' => sub{
 		my $s = shift;
 		my $dt = shift;
-		
 		$s->dmy($dt)." ".$s->hms($dt);
 	});
 	

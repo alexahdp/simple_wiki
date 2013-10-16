@@ -18,7 +18,7 @@
 			% for my $task ( reverse sort {$a->{'date_complete'} <=> $a->{'date_complete'}} @{$complete_tasks->{$date}} ) {
 				<li class="complete-task">
 					<span task_id="<%= $task->{'_id'}; %>"><%= $task->{'task'}; %></span>
-					<div class="date_complete"><%= dmyhms($task->{'date_complete'}) %></div>
+					<div class="date_complete"><%= dmyhm($task->{'date_complete'}) %></div>
 					<i class="task-icon task-uncomplete-icon icon-arrow-right" title="Вернуть в стэк"></i>
 					<i class="task-icon task-remove-icon icon-remove" title="Удалить"></i>
 				</li>
@@ -49,7 +49,7 @@
 				% for my $task ( sort {$a->{'index'} <=> $b->{'index'}} @$tasks ) {
 					<li class="task">
 						<span class="desс" task_id="<%= $task->{'_id'} %>"><%= $task->{'task'} %></span>
-						<div class="date_add"><%= dmyhms($task->{'date_add'}) %></div>
+						<div class="date_add"><%= dmyhm($task->{'date_add'}) %></div>
 						<i class="task-icon task-remove-icon icon-remove" title="Удалить"></i>
 						<i class="task-icon task-complete-icon icon-ok" title="Выполнена"></i>
 					</li>

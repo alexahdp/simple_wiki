@@ -58,7 +58,7 @@ sub startup {
 	$aub->post('/discussion')->to('discussion#create');
 	$aub->post('/discussion/add_answer/:url_title')->to('discussion#add_answer');
 	
-	$r->get('/' => sub {shift->redirect_to('/login')});
+	$r->get('/' => sub {shift->redirect_to('/wiki')});
 }
 
 1;

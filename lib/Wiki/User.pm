@@ -56,6 +56,11 @@ sub auth_bridge {
 
 sub login_form {
 	my $s = shift;
+	
+	if ($s->session('user_id')) {
+		$s->redirect_to('/');
+	}
+	
 	$s->render('login');
 };
 
