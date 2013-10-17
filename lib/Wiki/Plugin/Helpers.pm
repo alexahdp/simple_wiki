@@ -57,7 +57,15 @@ sub register {
 	$app->helper('extend' => sub {
 		my $s = shift;
 		
-		my ($def, $extended_object) = @_;
+		die "too short args" if @_ < 2;
+		
+		my ($def, $extended_object);
+		if (@_ > 2) {
+			($extended_object, $def) = (pop, $s->extend(@_));
+		}else{
+			($def, $extended_object) = @_;
+		}
+		
 		my $default_object = {%$def};
 		foreach ( keys %{$extended_object} ){
 			if (ref $extended_object->{$_} eq 'HASH'){
