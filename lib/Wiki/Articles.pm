@@ -11,6 +11,7 @@ sub list {
 	my $s = shift;
 	
 	my $collection = Mango::Collection->new(db => $s->mango->db)->name('articles');
+	
 	# Для каждого url_title надо получить max версию
 	# Mongo группирует и возвращает все как надо, кроме одного: url_title называется _id.
 	# Поэтому приходится дополнительно пробегаться map'ом
@@ -99,6 +100,7 @@ sub update {
 		$s->mango->db->collection('articles')
 			->remove({ _id => Mango::BSON::ObjectID->new($all_versions->[0]->{_id}) });
 	}
+
 	$s->render(json => {'success' => $s->json->true});
 };
 
