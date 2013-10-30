@@ -1,3 +1,8 @@
+_.templateSettings = {
+	interpolate: /\{\{(.+?)\}\}/g,
+	evaluate: /\[\[(.+?)\]\]/g
+};
+
 /**
  * Получить время в в виде HH:mm, минуты округляются в 10-минутном диапазоне
  */
@@ -226,10 +231,46 @@ $(document).ready(function(){
 					me.parent().children('span').text(task_text).show();
 					me.remove();
 				}
-			},
-			error: function(){
-				
 			}
 		})
+	});
+	
+	//Получить с сервера выполненные задачи и добавить на макет
+	function get_complete_tasks(page) {
+		$.get('jtasks_complete/alexahdp/' + page, {}, function(res){
+			var task_tmpl = _.template($('#complete_task_tmpl').html());
+			var day_tmpl = _.template($('#work_day_tmpl').html());
+			if (res.success === true) {
+				$(Object.keys(res.items)).each(function(i, day) {
+					$(day_tmpl({
+						current: true,
+						type: 'alert-success',
+						date: day,
+						task_tmpl: task_tmpl,
+						tasks: res.items[day]
+					})).appendTo('#complete-stack')
+				});
+			}
+		}, 'json');
+	}
+	
+	//Получить с сервера выполненные задачи и добавить на макет
+	$.get('jtasks_/alexahdp', {}, function(res){
+		if (res.success === true) {
+			var task_tmpl = _.template($('#task_tmpl').html());
+			$(res.items).each(function(i, task){
+				$('#task-pull').append( task_tmpl(task) );
+			});
+		}
+	}, 'json');
+	
+	
+	get_complete_tasks(1);
+	
+	$('li', '#complete_task_pagination').click(function(e) {
+		e.preventDefault();
+		$('#complete-stack').empty();
+		$(this).siblings().removeClass('active').end().addClass('active');
+		get_complete_tasks($(this).text());
 	});
 });

@@ -1,60 +1,72 @@
-% layout 'default', title => 'Tasks', styles => ['/css/tasks.css'], scripts => ['/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/tasks.js'];
+% layout 'default', title => 'Tasks', styles => ['/css/tasks.css'], scripts => ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/tasks.js'];
 
 <div class="row show-grid">
 	<div id="user-navigation-container" class="span12">
 		<div class="btn-group">
-			% for (@{user_list()}) {
+			% for ( @{user_list()} ) {
 				<a href="/tasks?exec=<%=$_->{username}%>" class="btn <%= $exec eq $_->{'username'} ? 'active':''%>"><%= $_->{'username'} %></a>
 			% }
 		</div>
 	</div>
 	
 	<div class="span6">
-	% my $first = 1;
-	% for my $date ( reverse sort keys %$complete_tasks ) {
-		<div class="work-day <%= $first == 1 ? 'current':'' %>">
-			<div class="alert <% $first == 1 ? 'alert-success': 'alert-info';%>"><%= $date; %></div>
-			<ol>
-			% for my $task ( reverse sort {$a->{'date_complete'} <=> $a->{'date_complete'}} @{$complete_tasks->{$date}} ) {
-				<li class="complete-task">
-					<span task_id="<%= $task->{'_id'}; %>"><%= $task->{'task'}; %></span>
-					<div class="date_complete"><%= dmyhm($task->{'date_complete'}) %></div>
-					<i class="task-icon task-uncomplete-icon icon-arrow-right" title="Вернуть в стэк"></i>
-					<i class="task-icon task-remove-icon icon-remove" title="Удалить"></i>
-				</li>
-			% }
-			</ol>
-			</div>
-			<div class="clearfix"></div>
-			% $first = 0;
-		% }
+		<div id="complete_task_pagination" class="pagination pagination-centered">
+			<ul>
+				% my $page = 1;
+				<li class="<%= $page == 1 ? 'disabled' : ''%>"><a href="#">«</a></li>
+				% for my $page_num (1..$total) {
+					<li class="<%= $page_num == $page ? 'active':'' %>"><a href="#"><%= $page_num %></a></li>
+				% }
+				<li class="<%= $page == $total ? 'disabled' : ''%>"><a href="#">»</a></li>
+			</ul>
+		</div>
+		<div id="complete-stack"></div>
 	</div>
 	
 	<div class="span6">
-		
 		<div class="control-group">
-			<label for="new_task" class="control-label">Текст задачи</label>
+			<label for="new_task" class="control-label">Task text</label>
 			<div class="controls">
 				<input type="text" id="new_task" name="new_task" style="width: 450px;">
 			</div>
 		</div>
 		<div class="control-group">
 			<div class="controls">
-				<input id="add_new_task_button" type="button" class="btn btn-primary" value="Добавить" >
+				<input id="add_new_task_button" type="button" class="btn btn-primary" value="Add" >
 			 </div>
 		</div>
-		
 		<div>
-			<ol id="task-pull">
-				% for my $task ( sort {$a->{'index'} <=> $b->{'index'}} @$tasks ) {
-					<li class="task">
-						<span class="desс" task_id="<%= $task->{'_id'} %>"><%= $task->{'task'} %></span>
-						<div class="date_add"><%= dmyhm($task->{'date_add'}) %></div>
-						<i class="task-icon task-remove-icon icon-remove" title="Удалить"></i>
-						<i class="task-icon task-complete-icon icon-ok" title="Выполнена"></i>
-					</li>
-				% }
-			</ol>
+			<ol id="task-pull"></ol>
 		</div>
 	</div>
 </div>
+
+<script type="text/template" id="work_day_tmpl">
+	<div class="work-day {{ current ? 'current':''}}">
+		<div class="alert {{ type }}">{{ date }}</div>
+		<ol>
+			[[ _.each( tasks, function(task, i) { ]]
+				{{ task_tmpl(task) }}
+			[[ }); ]]
+		</ol>
+	</div>
+	<div class="clearfix"></div>
+</script>
+
+<script type="text/template" id="complete_task_tmpl">
+	<li class="complete-task">
+		<span task_id="{{ _id }}">{{ task }}</span>
+		<div class="date_complete">{{ date_complete }}</div>
+		<i class="task-icon task-uncomplete-icon icon-arrow-right" title="Uncomplete"></i>
+		<i class="task-icon task-remove-icon icon-remove" title="Remove"></i>
+	</li>
+</script>
+
+<script type="text/template" id="task_tmpl">
+	<li class="task">
+		<span class="desс" task_id="{{ _id }}">{{ task }}</span>
+		<div class="date_add">{{ date_add }}</div>
+		<i class="task-icon task-remove-icon icon-remove" title="Remove"></i>
+		<i class="task-icon task-complete-icon icon-ok" title="Complete"></i>
+	</li>
+</script>
