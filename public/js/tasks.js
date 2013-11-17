@@ -1,43 +1,3 @@
-_.templateSettings = {
-	interpolate: /\{\{(.+?)\}\}/g,
-	evaluate: /\[\[(.+?)\]\]/g
-};
-
-/**
- * Получить время в в виде HH:mm, минуты округляются в 10-минутном диапазоне
- */
-Date.prototype.getTimeHM = function(){
-	m = 10 * Math.floor(this.getMinutes() / 10);
-	m = m == 0 ? '00' : m;
-	minutes = this.getMinutes()==0 ? '00' : m;
-	hours = this.getHours().toString();
-	if (hours.length < 2) hours = '0' + hours;
-	return (hours + ':' + minutes);
-};
-
-/**
- * Получить дату в виде: dd.mm.yyyy
- */
-Date.prototype.getDateDMY = function(){
-	monthz = parseInt(this.getMonth().toString(), 10) + 1;
-	if (monthz.toString().length < 2){
-		monthz = '0' + monthz;
-	}
-	dat = this.getDate().toString();
-	if (dat.length < 2){
-		dat = '0' + dat;
-	}
-	return (dat + '.' + monthz + "."+this.getFullYear().toString());
-};
-
-/**
- * Получить дату и время в виде: HH:mm dd.mm.yyyy
- */
-Date.prototype.getDateFull = function(){
-	return (this.getDateDMY()+" "+this.getTimeHM());
-};
-
-
 $(document).ready(function(){
 	
 	buffer = undefined;
@@ -202,8 +162,8 @@ $(document).ready(function(){
 	});
 	
 	//редактировать текст задачи при двойном щелчке по ней
-	$('.task span').on('dblclick', function(){
-		$("<input class='edit_task_input' type='text' value='"+$(this).text()+"'/>").appendTo($(this).parent()).focus();
+	$(document).on('dblclick', '.task span', function(){
+		$("<input class='edit_task_input' type='text' value='"+ $(this).text() +"'/>").appendTo($(this).parent()).focus();
 		$(this).hide();
 		buffer = $(this).text();
 	});
@@ -267,7 +227,7 @@ $(document).ready(function(){
 	
 	get_complete_tasks(1);
 	
-	$('li', '#complete_task_pagination').click(function(e) {
+	$(document).on('click', '#complete_task_pagination li', function(e){
 		e.preventDefault();
 		$('#complete-stack').empty();
 		$(this).siblings().removeClass('active').end().addClass('active');

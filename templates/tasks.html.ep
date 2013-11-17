@@ -1,4 +1,4 @@
-% layout 'default', title => 'Tasks', styles => ['/css/tasks.css'], scripts => ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/tasks.js'];
+% layout 'default', title => 'Tasks', styles => ['/css/tasks.css'], scripts => ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/core.js', '/js/tasks.js'];
 
 <div class="row show-grid">
 	<div id="user-navigation-container" class="span12">
