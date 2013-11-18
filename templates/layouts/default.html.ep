@@ -19,6 +19,13 @@
 	%= javascript $_ for(@{stash('scripts') || []});
 </head>
 <body>
+	% if ($ENV{'MOJO_MODE'} eq 'test') {
+	<div id="unit-tests">
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+	</div>
+	% }
+	
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">

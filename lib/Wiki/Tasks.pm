@@ -8,7 +8,7 @@ use POSIX qw(ceil);
 use strict;
 use warnings;
 
-
+# Вывести 
 sub list {
 	my $s = shift;
 	my $page = $s->p('page') || 0;
@@ -57,6 +57,7 @@ sub complete_tasks {
 			->find({'complete' => '1', 'exec' => $uname})
 			->skip($page * $items_on_page)
 			->limit($items_on_page)
+			->sort({'date_complete' => 1})
 			->all
 		}
 	];
@@ -87,14 +88,14 @@ sub create {
 	$s->render(json => {success => $s->json->true, id => $id});
 };
 
-
+# Удалить задачу по _id
 sub remove {
 	my $s = shift;
 	$s->mango->db->collection('task')->remove({'_id' => Mango::BSON::ObjectID->new($s->p('id'))});
 	$s->render(json => {success => $s->json->true});
 };
 
-
+# Обновить задачу по _id
 sub update {
 	my $s = shift;
 	my $task = $s->req->params()->to_hash;

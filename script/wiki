@@ -5,7 +5,7 @@ use warnings;
 
 use FindBin;
 BEGIN {
-	$ENV{'MOJO_MODE'} = 'development';
+	$ENV{'MOJO_MODE'} = 'test'; # production development test
 	unshift @INC, "$FindBin::Bin/../lib";
 }
 

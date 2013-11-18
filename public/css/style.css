@@ -68,3 +68,10 @@ body{
 .wysibb .powered{
 	display: none;
 }
+
+#unit-tests{
+	position: absolute;
+	z-index: 1000;
+	width: 100%;
+	top: 100px;
+}
