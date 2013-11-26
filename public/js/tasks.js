@@ -1,6 +1,29 @@
 $(document).ready(function(){
-	
+	var TaskList = new TaskPull({el: '#task-pull', });
+	var CTaskList = new TaskPull({el: '#complete-stack', });
 	buffer = undefined;
+	CTaskList.add = function(task) {
+		//если это первая задача за день - необходимо создать новый день и в него добавлять задачи
+		var today = new Date().getDateDMY();
+		
+		if(today == $('div.work-day.current .alert').text()){
+			var parent_elem = $('div.work-day.current ol');
+			var elem = $("<li class='complete-task'></li>").prependTo('div.work-day.current ol');
+		}else{
+			
+			$('.work-day.current > div').removeClass('alert-success').addClass('alert-info');
+			var elem = $("<div class='work-day current'><div class='alert alert-success'>"+today+"</div></div>'")
+				.prependTo(
+					$('div.work-day.current')
+						.removeClass('current')
+						.parent()
+				);
+			
+			var ol = $("<ol></ol>").appendTo(elem);
+			elem = $("<li class='complete-task'></li>").appendTo(ol);
+		}
+		elem.append(task);
+	};
 	
 	//кнопка Добавить новую задачу
 	$('#add_new_task_button').click(function(){
@@ -22,15 +45,8 @@ $(document).ready(function(){
 			data: {task: $('#new_task').val()},
 			dataType: 'json',
 			success: function(answ){
-				if(answ.success){
-					$('#task-pull').append(
-						"<li class='task'>"+
-							"<span class='desc' task_id='"+answ.id+"'>"+$('#new_task').val()+"</span>"+
-							"<div class='date_add'>"+new Date().getDateFull()+"</div>"+
-							"<i class='task-icon task-remove-icon icon-remove'></i>"+
-							"<i class='task-icon task-complete-icon icon-ok'></i>"+
-						"</li>"
-					);
+				if (answ.success) {
+					TaskList.add(answ.data);
 					$('#new_task').val('');
 				}else{
 					alert("error");

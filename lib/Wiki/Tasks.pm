@@ -84,8 +84,9 @@ sub create {
 		'task'     => $s->p('task'),
 		'complete' => '0',
 	};
-	my $id = $s->mango->db->collection('task')->insert($task);
-	$s->render(json => {success => $s->json->true, id => $id});
+	$task->{id} = $s->mango->db->collection('task')->insert($task);
+	
+	$s->render(json => {success => $s->json->true, data => $task});
 };
 
 # Удалить задачу по _id

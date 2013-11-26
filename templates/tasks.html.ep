@@ -1,5 +1,5 @@
 % my $styles = ['/css/tasks.css'];
-% my $scripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/core.js', '/js/tasks.js'];
+% my $scripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/core.js', '/js/tasks.js', '/js/tasks/task.js'];
 % $scripts = [@$scripts, '/js/lib/qunit.js', '/js/tasks/test.js'] if $ENV{'MOJO_MODE'} eq 'test';
 % $styles = [@$styles, '/css/qunit.css'] if $ENV{'MOJO_MODE'} eq 'test';
 % layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts;
