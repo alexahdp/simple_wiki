@@ -38,12 +38,12 @@ sub tasks {
 		->find({complete => '0', exec => $uname})
 		->all;
 	
-	$s->render(json => {success => $s->json->true, items => [sort {$a->{'index'} <=> $b->{'index'}} @$tasks ]});
+	$s->render(json => [sort {$a->{'index'} <=> $b->{'index'}} @$tasks ]);
 };
 
 sub complete_tasks {
 	my $s = shift;
-	my $page = $s->stash('page') - 1|| 0;
+	my $page = $s->stash('page') - 1;
 	my $items_on_page = 10;
 	
 	my $uname = $s->stash('exec') || $s->session('exec') || $s->stash('user')->{'username'};
@@ -62,31 +62,32 @@ sub complete_tasks {
 		}
 	];
 	
-	my $complete_tasks = {};
-	for ( @$complete_tasks_arr ) {
-		if (defined $complete_tasks->{ $_->{'date_complete_dmy'} }) {
-			$complete_tasks->{ $_->{'date_complete_dmy'} } = [
-				@{$complete_tasks->{ $_->{'date_complete_dmy'} }}, $_
-			];
-		} else {
-			$complete_tasks->{ $_->{'date_complete_dmy'} } = [$_];
-		}
-	};
+	#my $complete_tasks = {};
+	#for ( @$complete_tasks_arr ) {
+	#	if (defined $complete_tasks->{ $_->{'date_complete_dmy'} }) {
+	#		$complete_tasks->{ $_->{'date_complete_dmy'} } = [
+	#			@{$complete_tasks->{ $_->{'date_complete_dmy'} }}, $_
+	#		];
+	#	} else {
+	#		$complete_tasks->{ $_->{'date_complete_dmy'} } = [$_];
+	#	}
+	#};
 	
-	$s->render(json => {success => $s->json->true, items => $complete_tasks});
+	$s->render(json => $complete_tasks_arr);
 };
 
 sub create {
 	my $s = shift;
+	my $t = $s->req->json;
 	my $task = {
 		'exec'     => $s->session('exec'),
 		'date_add' => time,
-		'task'     => $s->p('task'),
+		'task'     => $t->{'task'},
 		'complete' => '0',
 	};
 	$task->{id} = $s->mango->db->collection('task')->insert($task);
 	
-	$s->render(json => {success => $s->json->true, data => $task});
+	$s->render(json => $task);
 };
 
 # Удалить задачу по _id
@@ -99,8 +100,8 @@ sub remove {
 # Обновить задачу по _id
 sub update {
 	my $s = shift;
-	my $task = $s->req->params()->to_hash;
-	
+	my $task = $s->req->json;
+	delete $task->{_id};
 	$s->mango->db->collection('task')->update(
 		{'_id' => Mango::BSON::ObjectID->new($s->p('id'))},
 		{'$set' => $task}

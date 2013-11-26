@@ -23,10 +23,12 @@
     font-size: 8pt;
     color: grey;
 }
-
+#complete-stack{
+    list-style: none;
+}
 li.complete-task{
     position: relative;
-    min-height: 20px;
+    min-height: 30px;
     outline: solid thin;
     outline-color: grey;
     margin-top: 4px;

@@ -1,3 +1,5 @@
+'use strict';
+
 $(document).ready(function(){
 	var TaskList = new TaskPull({el: '#task-pull', });
 	var CTaskList = new TaskPull({el: '#complete-stack', });

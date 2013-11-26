@@ -1,8 +1,25 @@
-% my $styles = ['/css/tasks.css'];
-% my $scripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/core.js', '/js/tasks.js', '/js/tasks/task.js'];
-% $scripts = [@$scripts, '/js/lib/qunit.js', '/js/tasks/test.js'] if $ENV{'MOJO_MODE'} eq 'test';
-% $styles = [@$styles, '/css/qunit.css'] if $ENV{'MOJO_MODE'} eq 'test';
-% layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts;
+<%
+my $styles = ['/css/tasks.css'];
+# my $scripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/core.js', '/js/tasks.js', '/js/tasks/task.js'];
+
+my $scripts = [
+	'/js/lib/underscore.js',
+	'/js/lib/jquery-ui-1.9.2.custom.min.js',
+	'/js/lib/backbone/backbone.js',
+	'/js/core.js',
+	'/js/tasks/model.js',
+	'/js/table/task.js',
+	'/js/table/task_list.js',
+	'/js/table/complete_task.js',
+	'/js/table/complete_task_list.js',
+	'/js/tasks/asd.js'
+];
+
+# $scripts = [@$scripts, '/js/lib/qunit.js', '/js/tasks/test.js'] if $ENV{'MOJO_MODE'} eq 'test';
+# $styles = [@$styles, '/css/qunit.css'] if $ENV{'MOJO_MODE'} eq 'test';
+layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts;
+%>
+
 
 <div class="row show-grid">
 	<div id="user-navigation-container" class="span12">
@@ -31,7 +48,7 @@
 		<div class="control-group">
 			<label for="new_task" class="control-label">Task text</label>
 			<div class="controls">
-				<input type="text" id="new_task" name="new_task" style="width: 450px;">
+				<input type="text" id="new_task" class="ddd" name="new_task" style="width: 450px;">
 			</div>
 		</div>
 		<div class="control-group">
@@ -58,19 +75,15 @@
 </script>
 
 <script type="text/template" id="complete_task_tmpl">
-	<li class="complete-task">
-		<span task_id="{{ _id }}">{{ task }}</span>
-		<div class="date_complete">{{ new Date(date_complete * 1000).getDateFull() }}</div>
-		<i class="task-icon task-uncomplete-icon icon-arrow-right" title="Uncomplete"></i>
-		<i class="task-icon task-remove-icon icon-remove" title="Remove"></i>
-	</li>
+	<span task_id="{{ _id }}">{{ task }}</span>
+	<div class="date_complete">{{ new Date(date_complete * 1000).getDateFull() }}</div>
+	<i class="task-icon task-uncomplete-icon icon-arrow-right" title="Uncomplete"></i>
+	<i class="task-icon task-remove-icon icon-remove" title="Remove"></i>
 </script>
 
 <script type="text/template" id="task_tmpl">
-	<li class="task">
-		<span class="desс" task_id="{{ _id }}">{{ task }}</span>
-		<div class="date_add">{{ new Date(date_add * 1000).getDateFull() }}</div>
-		<i class="task-icon task-remove-icon icon-remove" title="Remove"></i>
-		<i class="task-icon task-complete-icon icon-ok" title="Complete"></i>
-	</li>
+	<span class="desc" data-task_id="{{ _id }}">{{ task }}</span>
+	<div class="date_add">{{ new Date(date_add * 1000).getDateFull() }}</div>
+	<i class="task-icon task-remove-icon icon-remove" title="Remove"></i>
+	<i class="task-icon task-complete-icon icon-ok" title="Complete"></i>
 </script>
