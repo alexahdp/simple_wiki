@@ -14,10 +14,9 @@ U.TaskView = Backbone.View.extend({
 	
 	complete: function() {
 		this.model.complete();
-		//EventDispatcher.trigger('task:complete', this.model);
 		this.model.set('date_complete', new Date().getTimeInSeconds());
 		this.model.save();
-		U.complete_task_list.appendTask(this.model);
+		U.event_dispatcher.trigger('task:complete', this.model);
 		this.unrender();
 	},
 	

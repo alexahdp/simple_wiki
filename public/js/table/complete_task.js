@@ -1,11 +1,14 @@
 'use strict';
 
+/**
+ * Представление завершенной задачи
+ */
 U.CompleteTaskView = Backbone.View.extend({
 	tagName: 'li',
 	template: _.template($('#complete_task_tmpl').html()),
 	events: {
-		'click .task-uncomplete-icon'  : 'uncomplete',
-		'click .task-remove-icon'  : 'remove',
+		'click .task-uncomplete-icon' : 'uncomplete',
+		'click .task-remove-icon'     : 'remove',
 	},
 	
 	initialize: function() {
@@ -38,11 +41,10 @@ U.CompleteTaskView = Backbone.View.extend({
 	},
 	
 	uncomplete: function() {
-		var me = this;
 		var task = this.model;
 		this.unrender();
 		task.set('complete', '0');
-		U.tasks_list_view.appendTask(task);
+		U.event_dispatcher.trigger('task:uncomplete', task);
 		task.save();
 	}
 });

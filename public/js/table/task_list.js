@@ -13,9 +13,11 @@ U.TaskListView = Backbone.View.extend({
 		var me = this;
 		
 		_.bindAll(this, 'render', 'addTask', 'appendTask');
-		//me.$el = root_el;
+		
 		me.collection = new U.TaskList(options);
 		me.collection.bind('add', this.appendTask, this);
+		
+		U.event_dispatcher.on('task:uncomplete', this.appendTask, this);
 		
 		//сортировка задач в стэке
 		$('#task-pull', me.$el).sortable({
@@ -67,12 +69,12 @@ U.TaskListView = Backbone.View.extend({
 		$('#task-pull', this.$el).append(task_view.render().el);
 	},
 	
-	selectUser: function(e) {
-		this.collection.saveSettings({exec: [e.target.value]});
-		this.collection.reset();
-		$('#task-pull', this.$el).children().remove();
-		this.collection.dbSync(this.collection.widgetSettings);
-	},
+	//selectUser: function(e) {
+	//	this.collection.saveSettings({exec: [e.target.value]});
+	//	this.collection.reset();
+	//	$('#task-pull', this.$el).children().remove();
+	//	this.collection.dbSync(this.collection.widgetSettings);
+	//},
 	
 	newTask: function(e, task) {
 		if(e.target == this) return;

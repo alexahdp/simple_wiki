@@ -13,10 +13,10 @@ U.CompleteTaskListView = Backbone.View.extend({
 		
 		_.bindAll(this, 'render', 'addTask', 'appendTask');
 		
-		//EventDispatcher.on('task:complete', this.appendTask, this);
-		
 		me.collection = new U.CompleteTaskList();
 		me.collection.bind('add', this.appendTask);
+		
+		U.event_dispatcher.on('task:complete', this.appendTask, this);
 		
 		this.render();
 		
