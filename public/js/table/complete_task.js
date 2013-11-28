@@ -1,4 +1,5 @@
-$(function(){
+'use strict';
+
 U.CompleteTaskView = Backbone.View.extend({
 	tagName: 'li',
 	template: _.template($('#complete_task_tmpl').html()),
@@ -40,9 +41,8 @@ U.CompleteTaskView = Backbone.View.extend({
 		var me = this;
 		var task = this.model;
 		this.unrender();
-		task.set('complete', 0);
-		tasks_list_view.appendTask(task);
+		task.set('complete', '0');
+		U.tasks_list_view.appendTask(task);
 		task.save();
 	}
-});
 });

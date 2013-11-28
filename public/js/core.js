@@ -1,7 +1,14 @@
+//
+var U = {};
+
 _.templateSettings = {
 	interpolate: /\{\{(.+?)\}\}/g,
 	evaluate: /\[\[(.+?)\]\]/g
 };
+
+Date.prototype.getTimeInSeconds = function() {
+	return Math.floor(new Date().getTime() / 1000);
+}
 
 /**
  * Получить время в в виде HH:mm, минуты округляются в 10-минутном диапазоне

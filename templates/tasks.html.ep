@@ -1,6 +1,5 @@
 <%
 my $styles = ['/css/tasks.css'];
-# my $scripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/core.js', '/js/tasks.js', '/js/tasks/task.js'];
 
 my $scripts = [
 	'/js/lib/underscore.js',
@@ -12,12 +11,13 @@ my $scripts = [
 	'/js/table/task_list.js',
 	'/js/table/complete_task.js',
 	'/js/table/complete_task_list.js',
-	'/js/tasks/asd.js'
+	'/js/tasks.js'
 ];
 
-# $scripts = [@$scripts, '/js/lib/qunit.js', '/js/tasks/test.js'] if $ENV{'MOJO_MODE'} eq 'test';
-# $styles = [@$styles, '/css/qunit.css'] if $ENV{'MOJO_MODE'} eq 'test';
-layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts;
+$scripts = [@$scripts, '/js/lib/qunit.js', '/js/tasks/test.js'] if $ENV{'MOJO_MODE'} eq 'test';
+$styles = [@$styles, '/css/qunit.css'] if $ENV{'MOJO_MODE'} eq 'test';
+
+layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts, script => "U.user='".$exec."';";
 %>
 
 
@@ -31,7 +31,7 @@ layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts;
 	</div>
 	
 	<div class="span6">
-		<div id="complete_task_pagination" class="pagination pagination-centered">
+		<!--<div id="complete_task_pagination" class="pagination pagination-centered">
 			<ul>
 				% my $page = 1;
 				<li class="<%= $page == 1 ? 'disabled' : ''%>"><a href="#">«</a></li>
@@ -40,7 +40,7 @@ layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts;
 				% }
 				<li class="<%= $page == $total ? 'disabled' : ''%>"><a href="#">»</a></li>
 			</ul>
-		</div>
+		</div>-->
 		<div id="complete-stack"></div>
 	</div>
 	

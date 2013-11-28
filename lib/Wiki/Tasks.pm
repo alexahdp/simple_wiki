@@ -49,29 +49,12 @@ sub complete_tasks {
 	my $uname = $s->stash('exec') || $s->session('exec') || $s->stash('user')->{'username'};
 	$s->session(exec => $uname);
 	
-	my $complete_tasks_arr = [
-		map {
-			$_->{'date_complete_dmy'} = $s->dmy($_->{'date_complete'});
-			$_;
-		} @{ $s->mango->db->collection('task')
-			->find({'complete' => '1', 'exec' => $uname})
-			->skip($page * $items_on_page)
-			->limit($items_on_page)
-			->sort({'date_complete' => 1})
-			->all
-		}
-	];
-	
-	#my $complete_tasks = {};
-	#for ( @$complete_tasks_arr ) {
-	#	if (defined $complete_tasks->{ $_->{'date_complete_dmy'} }) {
-	#		$complete_tasks->{ $_->{'date_complete_dmy'} } = [
-	#			@{$complete_tasks->{ $_->{'date_complete_dmy'} }}, $_
-	#		];
-	#	} else {
-	#		$complete_tasks->{ $_->{'date_complete_dmy'} } = [$_];
-	#	}
-	#};
+	my $complete_tasks_arr = $s->mango->db->collection('task')
+		->find({'complete' => '1', 'exec' => $uname})
+		->skip($page * $items_on_page)
+		->limit($items_on_page)
+		->sort({'date_complete' => 1})
+		->all;
 	
 	$s->render(json => $complete_tasks_arr);
 };
@@ -85,7 +68,7 @@ sub create {
 		'task'     => $t->{'task'},
 		'complete' => '0',
 	};
-	$task->{id} = $s->mango->db->collection('task')->insert($task);
+	$task->{_id} = $s->mango->db->collection('task')->insert($task);
 	
 	$s->render(json => $task);
 };

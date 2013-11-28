@@ -1,4 +1,5 @@
-$(function(){
+'use strict';
+
 U.CompleteTaskListView = Backbone.View.extend({
 	el: $('body'),
 	events: {
@@ -24,12 +25,12 @@ U.CompleteTaskListView = Backbone.View.extend({
 			cursor: 'move',
 			stop: function(event, ui) {
 				var task_id = $(ui.item[0]).find('.desc').attr('data-task_id');
-				var task = tasks_list_view.collection.get(task_id);
+				var task = U.tasks_list_view.collection.get(task_id);
 				task.save();
 				var task_index = [];
 				var index = $(ui.item[0]).index();
 				for (var i = index; i < $(this).children().length; i++) {
-					var t = tasks_list_view.collection.get( $($(this).children()[i]).children('span.desc').attr('data-task_id') );
+					var t = U.tasks_list_view.collection.get( $($(this).children()[i]).children('span.desc').attr('data-task_id') );
 					t.set({'index': index});
 					t.save();
 					index++;
@@ -71,5 +72,4 @@ U.CompleteTaskListView = Backbone.View.extend({
 		if(e.target == this) return;
 		this.appendTask(task);
 	}
-});
 });
