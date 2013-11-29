@@ -3,33 +3,31 @@
 //Представление для списка задач
 U.TaskListView = Backbone.View.extend({
 	el: $('body'),
+	
 	events: {
 		'click #add_new_task_button': 'addTask',
-		'keydown .ddd': 'addTask',
-		//'change .select-user': 'selectUser'
+		'keydown .ddd'              : 'addTask',
 	},
 	
 	initialize: function(root_el, options) {
-		var me = this;
-		
 		_.bindAll(this, 'render', 'addTask', 'appendTask');
 		
-		me.collection = new U.TaskList(options);
-		me.collection.bind('add', this.appendTask, this);
+		this.collection = new U.TaskList(options);
+		this.collection.bind('add', this.appendTask, this);
 		
-		U.event_dispatcher.on('task:uncomplete', this.appendTask, this);
+		U.eventDispatcher.on('task:uncomplete', this.appendTask, this);
 		
 		//сортировка задач в стэке
-		$('#task-pull', me.$el).sortable({
+		$('#task-pull', this.$el).sortable({
 			cursor: 'move',
 			stop: function(event, ui) {
 				var task_id = $(ui.item[0]).find('.desc').attr('data-task_id');
-				var task = U.tasks_list_view.collection.get(task_id);
+				var task = U.taskListView.collection.get(task_id);
 				task.save();
 				var task_index = [];
 				var index = $(ui.item[0]).index();
 				for (var i = index; i < $(this).children().length; i++) {
-					var t = U.tasks_list_view.collection.get( $($(this).children()[i]).children('span.desc').attr('data-task_id') );
+					var t = U.taskListView.collection.get( $($(this).children()[i]).children('span.desc').attr('data-task_id') );
 					t.set({'index': index});
 					t.save();
 					index++;
@@ -46,14 +44,15 @@ U.TaskListView = Backbone.View.extend({
 	},
 	
 	addTask: function(e) {
-		if(typeof(e.keyCode) != 'undefined' && e.keyCode !== 13) return;
+		if (typeof(e.keyCode) != 'undefined' && e.keyCode !== 13) return;
 		
-		var me = this;
-		var task = new U.Task();
-		var attr = {
-			task: $('#new_task', this.$el).val(),
-			exec: $('.task-exec', this.$el).val()
-		};
+		var me = this,
+			task = new U.Task(),
+			attr = {
+				task: $('#new_task', this.$el).val(),
+				exec: $('.task-exec', this.$el).val()
+			};
+		
 		task.save(attr, {
 			success: function(model, response) {
 				me.appendTask(model);
@@ -63,21 +62,12 @@ U.TaskListView = Backbone.View.extend({
 	},
 	
 	appendTask: function(task) {
-		var task_view = new U.TaskView({
-			model: task
-		});
-		$('#task-pull', this.$el).append(task_view.render().el);
+		var taskView = new U.TaskView({ model: task });
+		$('#task-pull', this.$el).append( taskView.render().el );
 	},
 	
-	//selectUser: function(e) {
-	//	this.collection.saveSettings({exec: [e.target.value]});
-	//	this.collection.reset();
-	//	$('#task-pull', this.$el).children().remove();
-	//	this.collection.dbSync(this.collection.widgetSettings);
-	//},
-	
 	newTask: function(e, task) {
-		if(e.target == this) return;
+		if (e.target == this) return;
 		this.appendTask(task);
 	},
 	

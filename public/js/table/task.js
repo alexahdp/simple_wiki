@@ -16,7 +16,7 @@ U.TaskView = Backbone.View.extend({
 		this.model.complete();
 		this.model.set('date_complete', new Date().getTimeInSeconds());
 		this.model.save();
-		U.event_dispatcher.trigger('task:complete', this.model);
+		U.eventDispatcher.trigger('task:complete', this.model);
 		this.unrender();
 	},
 	
@@ -58,11 +58,9 @@ U.TaskView = Backbone.View.extend({
 	
 	remove: function() {
 		var me = this;
-		var task = this.model;
-		this.model.destroy({
+		me.model.destroy({
 			wait: true,
 			success: function(model, response){
-				console.log(response);
 				me.unrender();
 			}
 		});

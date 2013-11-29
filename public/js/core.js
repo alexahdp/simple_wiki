@@ -16,7 +16,7 @@ _.templateSettings = {
 	evaluate: /\[\[(.+?)\]\]/g
 };
 
-U.event_dispatcher = _.clone(Backbone.Events)
+U.eventDispatcher = _.clone(Backbone.Events)
 
 /**
  * Получить время в секундах с начала Linux-эпохи (perl time)
@@ -28,7 +28,7 @@ Date.prototype.getTimeInSeconds = function() {
 /**
  * Получить время в в виде HH:mm, минуты округляются в 10-минутном диапазоне
  */
-Date.prototype.getTimeHM = function(){
+Date.prototype.getTimeHM = function() {
 	var m = 10 * Math.floor(this.getMinutes() / 10);
 	m = m == 0 ? '00' : m;
 	var minutes = this.getMinutes() == 0 ? '00' : m;
@@ -40,21 +40,19 @@ Date.prototype.getTimeHM = function(){
 /**
  * Получить дату в виде: dd.mm.yyyy
  */
-Date.prototype.getDateDMY = function(){
-	var monthz = parseInt(this.getMonth().toString(), 10) + 1;
-	if (monthz.toString().length < 2){
-		monthz = '0' + monthz;
-	}
-	var dat = this.getDate().toString();
-	if (dat.length < 2){
-		dat = '0' + dat;
-	}
-	return (dat + '.' + monthz + "." + this.getFullYear().toString());
+Date.prototype.getDateDMY = function() {
+	var month = parseInt(this.getMonth().toString(), 10) + 1;
+	if (month.toString().length < 2) month = '0' + month;
+	
+	var date = this.getDate().toString();
+	if (date.length < 2) date = '0' + date;
+	
+	return (date + '.' + month + "." + this.getFullYear().toString());
 };
 
 /**
  * Получить дату и время в виде: HH:mm dd.mm.yyyy
  */
-Date.prototype.getDateFull = function(){
+Date.prototype.getDateFull = function() {
 	return (this.getDateDMY()+" "+this.getTimeHM());
 };

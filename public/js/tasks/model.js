@@ -47,7 +47,7 @@ U.CompleteTaskList = Backbone.Collection.extend({
 		this.dbSync(options);
 	},
 	
-	saveSettings: function(options) {},
+	//saveSettings: function(options) {},
 	
 	dbSync: function(options) {
 		var me = this;

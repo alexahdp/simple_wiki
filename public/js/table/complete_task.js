@@ -1,11 +1,9 @@
 'use strict';
 
-/**
- * Представление завершенной задачи
- */
 U.CompleteTaskView = Backbone.View.extend({
 	tagName: 'li',
 	template: _.template($('#complete_task_tmpl').html()),
+	
 	events: {
 		'click .task-uncomplete-icon' : 'uncomplete',
 		'click .task-remove-icon'     : 'remove',
@@ -44,7 +42,7 @@ U.CompleteTaskView = Backbone.View.extend({
 		var task = this.model;
 		this.unrender();
 		task.set('complete', '0');
-		U.event_dispatcher.trigger('task:uncomplete', task);
+		U.eventDispatcher.trigger('task:uncomplete', task);
 		task.save();
 	}
 });
