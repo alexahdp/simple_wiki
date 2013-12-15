@@ -25,6 +25,8 @@ sub startup {
 	$self->helper(mango => sub { state $mango = Mango->new( $self->conf->{db}{address} ) });
 	#$self->helper(db => sub { my $s = shift; $s->app->db;});
 	#$self->helper(db => sub { $self->db });
+	$self->log(Mojo::Log->new({'level' => 'info', path => 'log/mojo.log'}));
+	open(STDERR, '>>', 'log/mojo.log');
 	
 	# Router
 	my $r = $self->routes;

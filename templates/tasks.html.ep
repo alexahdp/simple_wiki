@@ -1,31 +1,23 @@
 <%
 my $styles = ['/css/tasks.css'];
 
-my $scripts = [
-	'/js/lib/underscore.js',
-	'/js/lib/jquery-ui-1.9.2.custom.min.js',
-	'/js/lib/backbone/backbone.js',
-	'/js/core.js',
-	'/js/tasks/model.js',
-	'/js/table/task.js',
-	'/js/table/task_list.js',
-	'/js/table/complete_task.js',
-	'/js/table/complete_task_list.js',
-	'/js/tasks.js'
-];
+my $headScripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/lib/backbone/backbone.js', '/js/core.js'];
+my $scripts = ['/js/tasks/model.js', '/js/table/task.js', '/js/table/task_list.js', '/js/table/complete_task.js', '/js/table/complete_task_list.js', '/js/tasks.js'];
 
 $scripts = [@$scripts, '/js/lib/qunit.js', '/js/tasks/test.js'] if $ENV{'MOJO_MODE'} eq 'test';
 $styles = [@$styles, '/css/qunit.css'] if $ENV{'MOJO_MODE'} eq 'test';
 
-layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts, script => "U.user='".$exec."';";
+layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts, headScripts => $headScripts;
 %>
-
+<script>
+	U.user = "<%= $exec %>";
+</script>
 
 <div class="row show-grid">
 	<div id="user-navigation-container" class="span12">
 		<div class="btn-group">
 			% for ( @{user_list()} ) {
-				<a href="/tasks?exec=<%=$_->{username}%>" class="btn <%= $exec eq $_->{'username'} ? 'active':''%>"><%= $_->{'username'} %></a>
+				<a href="/tasks?exec=<%=$_->{username}%>" class="btn <%= $exec eq $_->{'username'} ? 'active':''%>" data-id="<%= $_->{'username'} %>"><%= $_->{'username'} %></a>
 			% }
 		</div>
 	</div>

@@ -31,8 +31,8 @@ sub list {
 sub tasks {
 	my $s = shift;
 	
-	my $uname = $s->stash('exec') || $s->session('exec') || $s->stash('user')->{'username'};
-	
+	my $uname = $s->stash('uname') || $s->session('exec') || $s->stash('user')->{'username'};
+	warn $uname;
 	# Задачи на выполнение
 	my $tasks = $s->mango->db->collection('task')
 		->find({complete => '0', exec => $uname})

@@ -16,7 +16,7 @@
 	<script src="/js/lib/bootstrap.js"></script>
 	<script src="/js/lib/jquery.wysibb.min.js"></script>
 	<script src="/js/lib/alertify.min.js"></script>
-	
+	%= javascript $_ for(@{stash('headScripts') || []});
 </head>
 <body>
 	% if ($ENV{'MOJO_MODE'} eq 'test') {
@@ -57,8 +57,5 @@
 		%= content;
 	</div>
 	%= javascript $_ for(@{stash('scripts') || []});
-	%= javascript begin
-		%== $script
-	% end
 </body>
 </html>

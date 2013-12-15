@@ -14,8 +14,16 @@ U.TaskListView = Backbone.View.extend({
 		
 		this.collection = new U.TaskList(options);
 		this.collection.bind('add', this.appendTask, this);
+		this.collection.bind('reset', this.appendAll, this);
 		
 		U.eventDispatcher.on('task:uncomplete', this.appendTask, this);
+		U.eventDispatcher.on('task:changeUser', this.changeUser, this);
+		
+		this.collection.on('reset', function(col, opts){
+			_.each(opts.previousModels, function(model){
+				model.trigger('unrender');
+			});
+		});
 		
 		//сортировка задач в стэке
 		$('#task-pull', this.$el).sortable({
@@ -44,7 +52,10 @@ U.TaskListView = Backbone.View.extend({
 	},
 	
 	addTask: function(e) {
-		if (typeof(e.keyCode) != 'undefined' && e.keyCode !== 13) return;
+		if (typeof(e.keyCode) != 'undefined' && e.keyCode !== 13) {
+			console.log("ERROR");
+			return;
+		}
 		
 		var me = this,
 			task = new U.Task(),
@@ -61,9 +72,35 @@ U.TaskListView = Backbone.View.extend({
 		});
 	},
 	
+	appendAll: function(tasks){
+		var me = this;
+		//_.each(this.collection.models, function(val, i){
+		//	console.log(val);
+		//	val.unrender();
+		//});
+		tasks.forEach(function(val, i){
+			me.collection.add({model: val}, {silent: true});
+			me.appendTask(val);
+		});
+	},
+	
 	appendTask: function(task) {
 		var taskView = new U.TaskView({ model: task });
 		$('#task-pull', this.$el).append( taskView.render().el );
+	},
+	
+	changeUser: function(){
+		var me = this;
+		//this.collection.reset(this.collection.models);
+		this.collection.fetch({
+			success: function(collection, resp){
+				//_.each(resp, function(val, i){
+				//	me.appendTask(new U.Task(val));
+				//});
+				me.collection.reset(resp, {silent: true});
+			}
+		});
+		
 	},
 	
 	newTask: function(e, task) {
