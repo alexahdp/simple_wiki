@@ -57,6 +57,7 @@ sub startup {
 	$aub->put('/tasks/:id')->to('tasks#update');
 	$aub->delete('/tasks/:id')->to('tasks#remove');
 	$aub->post('/task_sort')->to('tasks#sort');
+	$aub->post('/tasks/change_user/:exec')->to('tasks#change_user', exec => '');
 	
 	$aub->get('/discussion/:url_title')->to('discussion#index', url_title => undef)->name('discussion');
 	$aub->post('/discussion')->to('discussion#create');

@@ -9,41 +9,25 @@ U.CompleteTaskListView = Backbone.View.extend({
 		'new_task'                  : 'newTask'
 	},
 	
-	initialize: function(root_el) {
+	initialize: function() {
 		_.bindAll(this, 'render', 'addTask', 'appendTask');
 		
 		this.collection = new U.CompleteTaskList();
 		this.collection.bind('add', this.appendTask);
+		this.collection.bind('reset', this.appendAll, this);
 		
 		U.eventDispatcher.on('task:complete', this.appendTask, this);
+		U.eventDispatcher.on('task:changeUser', this.changeUser, this);
+		
+		this.collection.on('reset', function(col, opts){
+			_.each(opts.previousModels, function(model){
+				model.trigger('unrender');
+			});
+		});
 		
 		this.render();
-		
-		//сортировка задач в стэке
-		$('.task-pull', this.$el).sortable({
-			cursor: 'move',
-			stop: function(event, ui) {
-				var task_id = $(ui.item[0]).find('.desc').attr('data-task_id');
-				var task = U.taskListView.collection.get(task_id);
-				task.save();
-				var task_index = [];
-				var index = $(ui.item[0]).index();
-				for (var i = index; i < $(this).children().length; i++) {
-					var t = U.taskListView.collection.get( $($(this).children()[i]).children('span.desc').attr('data-task_id') );
-					t.set({'index': index});
-					t.save();
-					index++;
-				}
-			}
-		});
 	},
 	
-	render: function() {
-		var self = this;
-		_(this.collection.models).each(function(task) {
-			self.appendTask(task);
-		}, this);
-	},
 	
 	addTask: function(e) {
 		if(typeof(e.keyCode) != 'undefined' && e.keyCode !== 13) return;
@@ -60,15 +44,39 @@ U.CompleteTaskListView = Backbone.View.extend({
 		});
 	},
 	
+	
+	appendAll: function(tasks){
+		var me = this;
+		tasks.forEach(function(val, i){
+			me.collection.add({model: val}, {silent: true});
+			me.appendTask(val);
+		});
+	},
+	
+	
 	appendTask: function(task) {
-		var task_view = new U.CompleteTaskView({
+		var taskView = new U.CompleteTaskView({
 			model: task
 		});
-		$('#complete-stack', this.$el).append(task_view.render().el);
+		$('#complete-stack', this.$el).append(taskView.render().el);
 	},
+	
+	
+	changeUser: function(){
+		this.collection.fetch();
+	},
+	
 	
 	newTask: function(e, task){
 		if(e.target == this) return;
 		this.appendTask(task);
+	},
+	
+	
+	render: function() {
+		var self = this;
+		_(this.collection.models).each(function(task) {
+			self.appendTask(task);
+		}, this);
 	}
 });

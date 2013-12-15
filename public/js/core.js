@@ -56,3 +56,7 @@ Date.prototype.getDateDMY = function() {
 Date.prototype.getDateFull = function() {
 	return (this.getDateDMY()+" "+this.getTimeHM());
 };
+
+function log(args) {
+	console.log(args);
+}

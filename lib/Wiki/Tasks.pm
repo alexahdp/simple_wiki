@@ -63,7 +63,7 @@ sub create {
 	my $s = shift;
 	my $t = $s->req->json;
 	my $task = {
-		'exec'     => $s->session('exec'),
+		'exec'     => $t->{'exec'},
 		'date_add' => time,
 		'task'     => $t->{'task'},
 		'complete' => '0',
@@ -103,6 +103,13 @@ sub sort {
 			{ '$set' => {index => $_->{'index'}} }
 		);
 	}
+	$s->render(json => {success => $s->json->true});
+};
+
+sub change_user {
+	my $s = shift;
+		
+	$s->session('exec' => $s->stash('exec')) || $s->session('exec');
 	$s->render(json => {success => $s->json->true});
 };
 

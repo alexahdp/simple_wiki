@@ -14,6 +14,7 @@ U.CompleteTaskView = Backbone.View.extend({
 		
 		this.model.bind('change', this.render);
 		this.model.bind('remove', this.unrender);
+		this.model.bind('unrender', this.unrender);
 	},
 	
 	render: function() {

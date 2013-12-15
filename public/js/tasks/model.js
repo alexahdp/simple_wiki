@@ -43,7 +43,9 @@ U.TaskList = Backbone.Collection.extend({
 // Список задач
 U.CompleteTaskList = Backbone.Collection.extend({
 	model: U.Task,
-	url: 'jtasks_complete/' + U.user,
+	url: function(){
+		return 'jtasks_complete/' + U.user;
+	},
 	
 	initialize: function(options) {
 		this.dbSync(options);

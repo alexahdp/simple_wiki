@@ -29,10 +29,9 @@ U.TaskListView = Backbone.View.extend({
 		$('#task-pull', this.$el).sortable({
 			cursor: 'move',
 			stop: function(event, ui) {
-				var task_id = $(ui.item[0]).find('.desc').attr('data-task_id');
-				var task = U.taskListView.collection.get(task_id);
+				var taskId = $(ui.item[0]).find('.desc').attr('data-task_id');
+				var task = U.taskListView.collection.get(taskId);
 				task.save();
-				var task_index = [];
 				var index = $(ui.item[0]).index();
 				for (var i = index; i < $(this).children().length; i++) {
 					var t = U.taskListView.collection.get( $($(this).children()[i]).children('span.desc').attr('data-task_id') );
@@ -61,7 +60,7 @@ U.TaskListView = Backbone.View.extend({
 			task = new U.Task(),
 			attr = {
 				task: $('#new_task', this.$el).val(),
-				exec: $('.task-exec', this.$el).val()
+				exec: U.user
 			};
 		
 		task.save(attr, {
@@ -74,10 +73,6 @@ U.TaskListView = Backbone.View.extend({
 	
 	appendAll: function(tasks){
 		var me = this;
-		//_.each(this.collection.models, function(val, i){
-		//	console.log(val);
-		//	val.unrender();
-		//});
 		tasks.forEach(function(val, i){
 			me.collection.add({model: val}, {silent: true});
 			me.appendTask(val);
@@ -90,17 +85,7 @@ U.TaskListView = Backbone.View.extend({
 	},
 	
 	changeUser: function(){
-		var me = this;
-		//this.collection.reset(this.collection.models);
-		this.collection.fetch({
-			success: function(collection, resp){
-				//_.each(resp, function(val, i){
-				//	me.appendTask(new U.Task(val));
-				//});
-				me.collection.reset(resp, {silent: true});
-			}
-		});
-		
+		this.collection.fetch();
 	},
 	
 	newTask: function(e, task) {
