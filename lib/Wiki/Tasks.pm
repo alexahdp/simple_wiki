@@ -18,7 +18,7 @@ sub list {
 	$s->session(exec => $uname);
 	
 	my $total = $s->mango->db->collection('task')
-		->find({ complete => '1', exec => $uname })
+		->find({ complete => '1', exec => $uname, removed => {'$exists' => 0}})
 		->count;
 	
 	$s->render(
@@ -35,7 +35,7 @@ sub tasks {
 	warn $uname;
 	# Задачи на выполнение
 	my $tasks = $s->mango->db->collection('task')
-		->find({complete => '0', exec => $uname})
+		->find({complete => '0', exec => $uname, 'removed' => {'$exists' => 0}})
 		->all;
 	
 	$s->render(json => [sort {$a->{'index'} <=> $b->{'index'}} @$tasks ]);
@@ -50,7 +50,7 @@ sub complete_tasks {
 	$s->session(exec => $uname);
 	
 	my $complete_tasks_arr = $s->mango->db->collection('task')
-		->find({'complete' => '1', 'exec' => $uname})
+		->find({'complete' => '1', 'exec' => $uname, 'removed' => {'$exists' => 0}})
 		->skip($page * $items_on_page)
 		->limit($items_on_page)
 		->sort({'date_complete' => -1})
@@ -62,11 +62,14 @@ sub complete_tasks {
 sub create {
 	my $s = shift;
 	my $t = $s->req->json;
+	
+	# Переписать этот уродский механизм!!!
 	my $task = {
 		'exec'     => $t->{'exec'},
 		'date_add' => time,
 		'task'     => $t->{'task'},
 		'complete' => '0',
+		'index'    => $t->{'index'},
 	};
 	$task->{_id} = $s->mango->db->collection('task')->insert($task);
 	
@@ -76,7 +79,7 @@ sub create {
 # Удалить задачу по _id
 sub remove {
 	my $s = shift;
-	$s->mango->db->collection('task')->remove({'_id' => Mango::BSON::ObjectID->new($s->p('id'))});
+	$s->mango->db->collection('task')->update({'_id' => Mango::BSON::ObjectID->new($s->p('id'))}, {'removed' => '1'});
 	$s->render(json => {success => $s->json->true});
 };
 
