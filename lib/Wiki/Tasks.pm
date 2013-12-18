@@ -53,7 +53,7 @@ sub complete_tasks {
 		->find({'complete' => '1', 'exec' => $uname})
 		->skip($page * $items_on_page)
 		->limit($items_on_page)
-		->sort({'date_complete' => 1})
+		->sort({'date_complete' => -1})
 		->all;
 	
 	$s->render(json => $complete_tasks_arr);

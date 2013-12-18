@@ -29,8 +29,8 @@ Date.prototype.getTimeInSeconds = function() {
  * Получить время в в виде HH:mm, минуты округляются в 10-минутном диапазоне
  */
 Date.prototype.getTimeHM = function() {
-	var m = 10 * Math.floor(this.getMinutes() / 10);
-	m = m == 0 ? '00' : m;
+	var m = this.getMinutes();
+	m = m.toString().length == 1 ? '0' + m : m;
 	var minutes = this.getMinutes() == 0 ? '00' : m;
 	var hours = this.getHours().toString();
 	if (hours.length < 2) hours = '0' + hours;

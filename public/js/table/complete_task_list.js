@@ -16,7 +16,7 @@ U.CompleteTaskListView = Backbone.View.extend({
 		this.collection.bind('add', this.appendTask);
 		this.collection.bind('reset', this.appendAll, this);
 		
-		U.eventDispatcher.on('task:complete', this.appendTask, this);
+		U.eventDispatcher.on('task:complete', this.prependTask, this);
 		U.eventDispatcher.on('task:changeUser', this.changeUser, this);
 		
 		this.collection.on('reset', function(col, opts){
@@ -30,8 +30,6 @@ U.CompleteTaskListView = Backbone.View.extend({
 	
 	
 	addTask: function(e) {
-		if(typeof(e.keyCode) != 'undefined' && e.keyCode !== 13) return;
-		
 		var me = this;
 		var task = new Task;
 		var attr = { task: $('.new_task', this.$el).val() };
@@ -72,6 +70,12 @@ U.CompleteTaskListView = Backbone.View.extend({
 		this.appendTask(task);
 	},
 	
+	prependTask: function(task) {
+		var taskView = new U.CompleteTaskView({
+			model: task
+		});
+		$('#complete-stack', this.$el).prepend(taskView.render().el);
+	},
 	
 	render: function() {
 		var self = this;

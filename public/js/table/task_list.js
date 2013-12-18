@@ -4,16 +4,19 @@
 U.TaskListView = Backbone.View.extend({
 	el: $('body'),
 	
+	prepend: true,
+	
 	events: {
-		'click #add_new_task_button': 'addTask',
-		'keydown .ddd'              : 'addTask',
+		'click #add_new_task_button' : 'addTask',
+		'keydown .ddd'               : 'addTask',
+		'switch-change #append-mode': 'switchMode'
 	},
 	
 	initialize: function(root_el, options) {
-		_.bindAll(this, 'render', 'addTask', 'appendTask');
+		_.bindAll(this, 'render', 'createTask', 'addTask', 'appendTask');
 		
 		this.collection = new U.TaskList(options);
-		this.collection.bind('add', this.appendTask, this);
+		this.collection.bind('add', this.createTask, this);
 		this.collection.bind('reset', this.appendAll, this);
 		
 		U.eventDispatcher.on('task:uncomplete', this.appendTask, this);
@@ -44,15 +47,14 @@ U.TaskListView = Backbone.View.extend({
 	},
 	
 	render: function() {
-		var self = this;
+		var me = this;
 		_(this.collection.models).each(function(task) {
-			self.appendTask(task);
+			me.appendTask(task);
 		}, this);
 	},
 	
 	addTask: function(e) {
 		if (typeof(e.keyCode) != 'undefined' && e.keyCode !== 13) {
-			console.log("ERROR");
 			return;
 		}
 		
@@ -60,15 +62,22 @@ U.TaskListView = Backbone.View.extend({
 			task = new U.Task(),
 			attr = {
 				task: $('#new_task', this.$el).val(),
-				exec: U.user
+				exec: U.user,
+				index: me.prepend ? $('#task-pull').children().length : 0
 			};
 		
 		task.save(attr, {
 			success: function(model, response) {
-				me.appendTask(model);
+				model.id = response._id;
+				me.collection.add(model, {silent: true});
+				me.createTask(model);
 				$('#new_task', me.$el).val('');
 			}
 		});
+	},
+	
+	createTask: function(model){
+		this.prepend ? this.appendTask(model) : this.prependTask(model);
 	},
 	
 	appendAll: function(tasks){
@@ -80,6 +89,7 @@ U.TaskListView = Backbone.View.extend({
 	},
 	
 	appendTask: function(task) {
+		task.index = $('#task-pull').children().length;
 		var taskView = new U.TaskView({ model: task });
 		$('#task-pull', this.$el).append( taskView.render().el );
 	},
@@ -94,6 +104,19 @@ U.TaskListView = Backbone.View.extend({
 	},
 	
 	prependTask: function(task) {
-		this.$el.prepend( task_view.render().el );
+		task.index = 0;
+		var taskView = new U.TaskView({ model: task });
+		$('#task-pull', this.$el).prepend( taskView.render().el );
+		var index = 1;
+		for (var i = 1; i < $('#task-pull').children().length; i++) {
+			var t = U.taskListView.collection.get( $($('#task-pull').children()[i]).children('span.desc').attr('data-task_id') );
+			t.set({'index': index});
+			t.save();
+			index++;
+		}
+	},
+	
+	switchMode: function(e){
+		this.prepend = ! this.prepend;
 	}
 });

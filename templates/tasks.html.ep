@@ -1,7 +1,7 @@
 <%
-my $styles = ['/css/tasks.css'];
+my $styles = ['/css/bootstrap-switch.css', '/css/tasks.css'];
 
-my $headScripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/lib/backbone/backbone.js', '/js/core.js'];
+my $headScripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/lib/backbone/backbone.js', '/js/lib/bootstrap-switch.js', '/js/core.js'];
 my $scripts = ['/js/tasks/model.js', '/js/table/task.js', '/js/table/task_list.js', '/js/table/complete_task.js', '/js/table/complete_task_list.js', '/js/tasks.js'];
 
 $scripts = [@$scripts, '/js/lib/qunit.js', '/js/tasks/test.js'] if $ENV{'MOJO_MODE'} eq 'test';
@@ -41,12 +41,11 @@ layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts, head
 			<label for="new_task" class="control-label">Task text</label>
 			<div class="controls">
 				<input type="text" id="new_task" class="ddd" name="new_task" style="width: 450px;">
+				<div id="append-mode" class="make-switch" data-on-label="конец" data-off-label="начало">
+					<input type="checkbox" checked/>
+				</div>
+				<input id="add_new_task_button" type="button" class="btn btn-primary" value="Add" style="margin-left: 20px" />
 			</div>
-		</div>
-		<div class="control-group">
-			<div class="controls">
-				<input id="add_new_task_button" type="button" class="btn btn-primary" value="Add" >
-			 </div>
 		</div>
 		<div>
 			<ol id="task-pull"></ol>
