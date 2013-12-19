@@ -32,7 +32,7 @@ sub tasks {
 	my $s = shift;
 	
 	my $uname = $s->stash('uname') || $s->session('exec') || $s->stash('user')->{'username'};
-	warn $uname;
+	
 	# Задачи на выполнение
 	my $tasks = $s->mango->db->collection('task')
 		->find({complete => '0', exec => $uname, 'removed' => {'$exists' => 0}})
@@ -43,7 +43,7 @@ sub tasks {
 
 sub complete_tasks {
 	my $s = shift;
-	my $page = $s->stash('page') - 1;
+	my $page = ($s->p('page') || 1) - 1;
 	my $items_on_page = 10;
 	
 	my $uname = $s->stash('exec') || $s->session('exec') || $s->stash('user')->{'username'};
@@ -55,7 +55,7 @@ sub complete_tasks {
 		->limit($items_on_page)
 		->sort({'date_complete' => -1})
 		->all;
-	
+	warn Dumper($complete_tasks_arr);
 	$s->render(json => $complete_tasks_arr);
 };
 
@@ -65,11 +65,12 @@ sub create {
 	
 	# Переписать этот уродский механизм!!!
 	my $task = {
-		'exec'     => $t->{'exec'},
-		'date_add' => time,
-		'task'     => $t->{'task'},
-		'complete' => '0',
-		'index'    => $t->{'index'},
+		'exec'          => $t->{'exec'},
+		'date_add'      => time,
+		'task'          => $t->{'task'},
+		'complete'      => '0',
+		'index'         => $t->{'index'},
+		'last_modified' => time
 	};
 	$task->{_id} = $s->mango->db->collection('task')->insert($task);
 	
@@ -79,7 +80,11 @@ sub create {
 # Удалить задачу по _id
 sub remove {
 	my $s = shift;
-	$s->mango->db->collection('task')->update({'_id' => Mango::BSON::ObjectID->new($s->p('id'))}, {'removed' => '1'});
+	$s->mango->db->collection('task')->update(
+		{'_id' => Mango::BSON::ObjectID->new($s->p('id'))},
+		{'$set' => {'removed' => '1', 'last_modified' => time}}
+	);
+	warn "###remove_time####";
 	$s->render(json => {success => $s->json->true});
 };
 
@@ -88,6 +93,7 @@ sub update {
 	my $s = shift;
 	my $task = $s->req->json;
 	delete $task->{_id};
+	$task->{'last_modified'} = time;
 	$s->mango->db->collection('task')->update(
 		{'_id' => Mango::BSON::ObjectID->new($s->p('id'))},
 		{'$set' => $task}
@@ -115,5 +121,14 @@ sub change_user {
 	$s->session('exec' => $s->stash('exec')) || $s->session('exec');
 	$s->render(json => {success => $s->json->true});
 };
+
+sub updates {
+	my $s = shift;
+	my $uname = $s->stash('uname') || $s->session('exec') || $s->stash('user')->{'username'};
+	my $last_query = $s->p('last_query') || time - 5;
+	
+	my $tasks = $s->mango->db->collection('task')->find({exec => $uname, last_modified => {'$gt' => $last_query}})->all;
+	$s->render(json => {tasks => $tasks, last_query => time});
+}
 
 1;

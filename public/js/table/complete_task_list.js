@@ -3,10 +3,13 @@
 U.CompleteTaskListView = Backbone.View.extend({
 	el: $('body'),
 	
+	page: 1,
+	
 	events: {
 		'click .add_new_task_button': 'addTask',
 		'keydown .new_task'         : 'addTask',
-		'new_task'                  : 'newTask'
+		'new_task'                  : 'newTask',
+		'click .more'               : 'getMore'
 	},
 	
 	initialize: function() {
@@ -64,6 +67,14 @@ U.CompleteTaskListView = Backbone.View.extend({
 		this.collection.fetch();
 	},
 	
+	getMore: function(){
+		var me = this;
+		//через fetch ни хуя не заработало, все время сбрасывало коллекцию, поэтому таким уродским методом (reset: false не помогло
+		$.get('jtasks_complete/' + U.user, {page: me.page}, function(res){
+			me.collection.add(res);
+			me.page++;
+		});
+	},
 	
 	newTask: function(e, task){
 		if(e.target == this) return;

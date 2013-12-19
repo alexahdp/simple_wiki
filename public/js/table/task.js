@@ -12,20 +12,18 @@ U.TaskView = Backbone.View.extend({
 		'keypress .edit_task_input': 'end_edit'
 	},
 	
-	complete: function() {
-		this.model.complete();
-		this.model.set('date_complete', new Date().getTimeInSeconds());
-		this.model.save();
-		U.eventDispatcher.trigger('task:complete', this.model);
-		this.unrender();
-	},
-	
 	initialize: function() {
 		_.bindAll(this, 'render', 'complete','unrender', 'edit_task', 'remove', 'end_edit');
 		
 		this.model.bind('change', this.render);
 		this.model.bind('remove', this.unrender);
 		this.model.bind('unrender', this.unrender);
+	},
+	
+	complete: function() {
+		this.model.complete();
+		U.eventDispatcher.trigger('task:complete', this.model);
+		this.unrender();
 	},
 	
 	edit_task: function(e) {
@@ -38,13 +36,15 @@ U.TaskView = Backbone.View.extend({
 		if(typeof(e.keyCode) != 'undefined' && e.keyCode != 13) return;
 		var me = this;
 		
-		this.model.set({task: $(e.target).val()});
-		this.model.save({
-			success: function(){
-				e.target.remove();
-				me.$el.find('.desc').show();
+		this.model.save(
+			{task: $(e.target).val()},
+			{
+				success: function(){
+					e.target.remove();
+					me.$el.find('.desc').show();
+				}
 			}
-		});
+		);
 	},
 	
 	render: function() {

@@ -2,8 +2,9 @@
 my $styles = ['/css/bootstrap-switch.css', '/css/tasks.css'];
 
 my $headScripts = ['/js/lib/underscore.js', '/js/lib/jquery-ui-1.9.2.custom.min.js', '/js/lib/backbone/backbone.js', '/js/lib/bootstrap-switch.js', '/js/core.js'];
-my $scripts = ['/js/tasks/model.js', '/js/table/task.js', '/js/table/task_list.js', '/js/table/complete_task.js', '/js/table/complete_task_list.js', '/js/tasks.js'];
+my $scripts = ['/js/tasks/model.js', '/js/table/task.js', '/js/table/task_list.js', '/js/table/complete_task.js', '/js/table/complete_task_list.js'];
 
+$scripts = [@$scripts,'/js/tasks.js'] if $ENV{'MOJO_MODE'} ne 'test';
 $scripts = [@$scripts, '/js/lib/qunit.js', '/js/tasks/test.js'] if $ENV{'MOJO_MODE'} eq 'test';
 $styles = [@$styles, '/css/qunit.css'] if $ENV{'MOJO_MODE'} eq 'test';
 
@@ -34,6 +35,7 @@ layout 'default', title => 'Tasks', styles => $styles, scripts => $scripts, head
 			</ul>
 		</div>-->
 		<div id="complete-stack"></div>
+		<div class="more">MORE</div>
 	</div>
 	
 	<div class="span6">

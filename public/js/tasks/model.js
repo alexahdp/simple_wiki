@@ -11,7 +11,7 @@ U.Task = Backbone.Model.extend({
 	},
 	
 	complete: function() {
-		this.save({complete: '1'});
+		this.save({complete: '1', 'date_complete': new Date().getTimeInSeconds()});
 	}
 });
 
@@ -23,20 +23,7 @@ U.TaskList = Backbone.Collection.extend({
 	},
 	
 	initialize: function(options) {
-		this.dbSync(options);
-	},
-	
-	saveSettings: function(options) {},
-	
-	dbSync: function(options) {
-		var me = this;
-		this.fetch({
-			update: true,
-			data: options,
-			success: function(models, response) {
-				me.add(response);
-			}
-		});
+		this.fetch();
 	}
 });
 
@@ -48,19 +35,20 @@ U.CompleteTaskList = Backbone.Collection.extend({
 	},
 	
 	initialize: function(options) {
-		this.dbSync(options);
+		//this.dbSync(options);
+		this.fetch();
 	},
 	
 	//saveSettings: function(options) {},
 	
-	dbSync: function(options) {
-		var me = this;
-		this.fetch({
-			update: true,
-			data: options,
-			success: function(models, response) {
-				me.add(response);
-			}
-		});
-	}
+	//dbSync: function(options) {
+	//	var me = this;
+	//	this.fetch({
+	//		update: true,
+	//		data: options,
+	//		success: function(models, response) {
+	//			me.add(response);
+	//		}
+	//	});
+	//}
 });

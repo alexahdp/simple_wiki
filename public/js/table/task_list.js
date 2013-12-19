@@ -44,6 +44,30 @@ U.TaskListView = Backbone.View.extend({
 				}
 			}
 		});
+		
+		//автоматически загружать изменения других пользователей
+		//var me = this;
+		//setInterval(function(){
+		//	$.get('/jtasks_updates/' + U.user, {last_query: U.last_query}, function(res){
+		//		U.last_query = res.last_query;
+		//		$.each(res.tasks, function(i, task) {
+		//			console.log(task);
+		//			if (task['removed'] == '1') {
+		//				var task_obj = me.collection.get(task._id);
+		//				task_obj.trigger('unrender');
+		//				me.collection.remove(task.id, {silent: true});
+		//			} else {
+		//				me.collection.add(li, {silent: true});
+		//				me.createTask(li);
+		//			}
+		//		});
+		//		
+		//	})
+		//}, 7000);
+		
+		//setInterval(function() {
+		//	channel.fetch();
+		//}, 10000);
 	},
 	
 	render: function() {

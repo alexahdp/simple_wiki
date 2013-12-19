@@ -29,41 +29,43 @@ sub startup {
 	open(STDERR, '>>', 'log/mojo.log');
 	
 	# Router
-	my $r = $self->routes;
-	
-	$r->get('/login')->to('user#login_form');
-	$r->post('/login')->to('user#login');
-	$r->get('/logout')->to('user#logout');
-	
-	$r->get('/registration')->to('user#registration_form');
-	$r->post('/registration')->to('user#registration');
-	
-	# Authentication bridge
-	my $aub = $r->bridge->to('user#auth_bridge');
-	
-	$aub->get('/wiki/:url_title')->to('articles#list', url_title => undef)->name('wiki');
-	$aub->post('/wiki')->to('articles#create');
-	$aub->put('/wiki/:id')->to('articles#update');
-	$aub->delete('/wiki/:url_title')->to('articles#remove');
-	
-	$aub->get('/wall/:page')->to('wall#list', page => 1)->name('wall');
-	$aub->post('/wall')->to('wall#add');
-	#$r->get('/:any') => sub{shift->redirect_to('wall#list')};
-	
-	$aub->get('/tasks/:uname')->to('tasks#list', 'uname' => undef)->name('tasks');
-	$aub->get('/jtasks_complete/:uname/:page')->to('tasks#complete_tasks', 'uname' => undef, page => 1);
-	$aub->get('/jtasks_/:uname/:page')->to('tasks#tasks', 'uname' => undef, page => 0);
-	$aub->post('/tasks')->to('tasks#create');
-	$aub->put('/tasks/:id')->to('tasks#update');
-	$aub->delete('/tasks/:id')->to('tasks#remove');
-	$aub->post('/task_sort')->to('tasks#sort');
-	$aub->post('/tasks/change_user/:exec')->to('tasks#change_user', exec => '');
-	
-	$aub->get('/discussion/:url_title')->to('discussion#index', url_title => undef)->name('discussion');
-	$aub->post('/discussion')->to('discussion#create');
-	$aub->post('/discussion/add_answer/:url_title')->to('discussion#add_answer');
-	
-	$r->get('/' => sub {shift->redirect_to('/wiki')});
+	for ($self->routes) {
+		
+		$_->get('/login')->to('user#login_form');
+		$_->post('/login')->to('user#login');
+		$_->get('/logout')->to('user#logout');
+		
+		$_->get('/registration')->to('user#registration_form');
+		$_->post('/registration')->to('user#registration');
+		
+		# Authentication bridge
+		for ($_->bridge->to('user#auth_bridge')) {
+			
+			$_->get('/wiki/:url_title')->to('articles#list', url_title => undef)->name('wiki');
+			$_->post('/wiki')->to('articles#create');
+			$_->put('/wiki/:id')->to('articles#update');
+			$_->delete('/wiki/:url_title')->to('articles#remove');
+			
+			$_->get('/wall/:page')->to('wall#list', page => 1)->name('wall');
+			$_->post('/wall')->to('wall#add');
+			#$r->get('/:any') => sub{shift->redirect_to('wall#list')};
+			
+			$_->get('/tasks/:uname')->to('tasks#list', 'uname' => undef)->name('tasks');
+			$_->get('/jtasks_complete/:uname')->to('tasks#complete_tasks', 'uname' => undef);
+			$_->get('/jtasks_/:uname/:page')->to('tasks#tasks', 'uname' => undef, page => 0);
+			$_->get('/jtasks_updates/:uname')->to('tasks#updates', 'uname' => undef);
+			$_->post('/tasks')->to('tasks#create');
+			$_->put('/tasks/:id')->to('tasks#update');
+			$_->delete('/tasks/:id')->to('tasks#remove');
+			$_->post('/task_sort')->to('tasks#sort');
+			$_->post('/tasks/change_user/:exec')->to('tasks#change_user', exec => '');
+			
+			$_->get('/discussion/:url_title')->to('discussion#index', url_title => undef)->name('discussion');
+			$_->post('/discussion')->to('discussion#create');
+			$_->post('/discussion/add_answer/:url_title')->to('discussion#add_answer');
+		}
+		$_->get('/' => sub {shift->redirect_to('/wiki')});
+	}
 }
 
 1;
