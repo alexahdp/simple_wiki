@@ -41,9 +41,8 @@ U.CompleteTaskView = Backbone.View.extend({
 	
 	uncomplete: function() {
 		var task = this.model;
+		task.uncomplete();
 		this.unrender();
-		task.set('complete', '0');
 		U.eventDispatcher.trigger('task:uncomplete', task);
-		task.save();
 	}
 });

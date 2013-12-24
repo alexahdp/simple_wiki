@@ -9,15 +9,16 @@ U.TaskListView = Backbone.View.extend({
 	events: {
 		'click #add_new_task_button' : 'addTask',
 		'keydown .ddd'               : 'addTask',
-		'switch-change #append-mode': 'switchMode'
+		'switch-change #append-mode' : 'switchMode'
 	},
 	
-	initialize: function(root_el, options) {
-		_.bindAll(this, 'render', 'createTask', 'addTask', 'appendTask');
+	initialize: function(root_el) {
+		_.bindAll(this, 'render', 'createTask', 'addTask', 'appendTask', 'appendAll');
 		
-		this.collection = new U.TaskList(options);
-		this.collection.bind('add', this.createTask, this);
-		this.collection.bind('reset', this.appendAll, this);
+		this.collection = new U.TaskList();
+		this.collection.on('add', this.createTask, this);
+		this.collection.on('reset', this.appendAll, this);
+		this.collection.fetch();
 		
 		U.eventDispatcher.on('task:uncomplete', this.appendTask, this);
 		U.eventDispatcher.on('task:changeUser', this.changeUser, this);

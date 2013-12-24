@@ -12,6 +12,10 @@ U.Task = Backbone.Model.extend({
 	
 	complete: function() {
 		this.save({complete: '1', 'date_complete': new Date().getTimeInSeconds()});
+	},
+	
+	uncomplete: function(){
+		this.save({complete: '0', 'date_complete': new Date().getTimeInSeconds()});
 	}
 });
 
@@ -22,9 +26,9 @@ U.TaskList = Backbone.Collection.extend({
 		return 'jtasks_/' + U.user;
 	},
 	
-	initialize: function(options) {
-		this.fetch();
-	}
+	//initialize: function(options) {
+	//	this.fetch({reset: true});
+	//}
 });
 
 // Список задач
@@ -34,21 +38,7 @@ U.CompleteTaskList = Backbone.Collection.extend({
 		return 'jtasks_complete/' + U.user;
 	},
 	
-	initialize: function(options) {
-		//this.dbSync(options);
-		this.fetch();
-	},
-	
-	//saveSettings: function(options) {},
-	
-	//dbSync: function(options) {
-	//	var me = this;
-	//	this.fetch({
-	//		update: true,
-	//		data: options,
-	//		success: function(models, response) {
-	//			me.add(response);
-	//		}
-	//	});
+	//initialize: function(options) {
+	//	this.fetch();
 	//}
 });

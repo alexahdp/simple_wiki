@@ -1,57 +1,68 @@
-function TaskPull({opts}) {
+'use strict';
+
+U.TaskView = Backbone.View.extend({
+	tagName: 'li',
+	template: _.template($('#task_tmpl').html()),
 	
-	this.el = $(opts.el);
-	this.items = [];
+	events: {
+		'click .task-remove-icon'  : 'remove',
+		'click .task-complete-icon': 'complete',
+		'dblclick .desc'           : 'edit_task',
+		'keypress .edit_task_input': 'end_edit'
+	},
 	
-	this.add = function(task) {
-		var t = new Task(task);
-		this.items.push(t);
-		this.el.append(t.render());
-	};
+	initialize: function() {
+		_.bindAll(this, 'render', 'complete','unrender', 'edit_task', 'remove', 'end_edit');
+		
+		this.model.bind('change', this.render);
+		this.model.bind('remove', this.unrender);
+		this.model.bind('unrender', this.unrender);
+	},
 	
-	this.remove = function(id) {
+	complete: function() {
+		this.model.complete();
+		U.eventDispatcher.trigger('task:complete', this.model);
+		this.unrender();
+	},
+	
+	edit_task: function(e) {
+		$("<input class='edit_task_input' type='text' value='" + this.model.get('task')+"'/>").appendTo(this.$el).focus();
+		$(e.target).hide();
+		this.$el.data('buffer', this.model.get('task'));
+	},
+	
+	end_edit: function(e) {
+		if(typeof(e.keyCode) != 'undefined' && e.keyCode != 13) return;
 		var me = this;
-		$(this.items).each(function(i, li) {
-			if (li.id === id) {
-				me.items.remove(i);
-				return false;
+		
+		this.model.save(
+			{task: $(e.target).val()},
+			{
+				success: function(){
+					e.target.remove();
+					me.$el.find('.desc').show();
+				}
+			}
+		);
+	},
+	
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		this.$el.addClass('task');
+		return this;
+	},
+	
+	remove: function() {
+		var me = this;
+		me.model.destroy({
+			wait: true,
+			success: function(model, response){
+				me.unrender();
 			}
 		});
-	};
+	},
 	
-	this.get = function(id) {
-		var me = this;
-		var task = null;
-		$(this.items).each(function(i, li) {
-			if (li.id === id) {
-				task = this;
-				return false;
-			}
-		});
-		return task;
+	unrender: function() {
+		$(this.el).remove();
 	}
-}
-
-function Task(args) {
-	if ($.type(args.task) !== 'string' || args.task === '') {
-		throw "Error, task not defined";
-	}
-	
-	if ($.type(args.id) !== 'string' || args.id === '') {
-		throw "Error, id not defined";
-	}
-	
-	args = $.extend({
-		complete: '0',
-		date_add: new Date().getTime()
-	}, args);
-	
-	for (key in args) {
-		this[key] = args[key];
-	}
-}
-
-Task.prototype.render = function(){
-	var task_tmpl = _.template($('#task_tmpl').html());
-	return task_tmpl(this);
-}
+});
